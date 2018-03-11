@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>McDonalds Viz</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+
+<!-- Header -->
+<div class="jumbotron" style = "background-color: #dd1021">
+  <div class = "container" style = "text-align: center;">
+    <h1 style = "font-weight: bold; color: #ffc300; text-shadow: 3px 4px 2px #000;">Where's Ronald and What's He Up To</h1>
+    <p></p>
+  </div>
+</div>
+
+<!-- Intro -->
+
+<div style = "margin: 40px;">
+  <div class="row">
+    <div class="span4 collapse-group">
+          <p><h4><b>Visualizing links between McDonalds locations, health, and poverty</b></h4><span class="collapse" id="viewdetails3"> McDonalds has become a ubiquitous part of the American landscape, with almost <a href = "https://www.statista.com/statistics/230976/people-who-visited-mcdonalds-usa/" target = "_blank">106 million people eating McDonalds within the past month</a>. However, research shows that greater fast food consuption is linked with negative health outcomes such as <a href = "https://www.scientificamerican.com/article/fast-food-linked-to-obesi/" target = "_blank">obesity and diabetes</a>. Low income individuals are also at <a href = "https://stateofobesity.org/socioeconomics-obesity/" target = "_blank">heightened risk for obesity</a>, in part because of <a href = "http://frac.org/obesity-health/low-income-food-insecure-people-vulnerable-poor-nutrition-obesity">greater availability of fast food and lower availability of healthy food</a>.<br><br></span> <a data-toggle="collapse" data-target="#viewdetails3">Learn why it matters...</a></p><hr>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Dropdown menu -->
+<div class = "container">
+  <label for = "selDataset">Select a variable: </label>
+  <select id="selDataset" onchange="optionChanged(this.value)">
+      <option value = "diabetes">% adults with diabetes</option>
+      <option value = "obese">% obese adults</option>
+      <option value = "pov">% low income households</option>
+      <option value = "snap">% households using SNAP</option>
+  </select>
+  <p></p>
+</div>
+
+<div class = "container">
+</div>
+
+
+
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</html>
