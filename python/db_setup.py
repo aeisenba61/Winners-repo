@@ -115,10 +115,11 @@ df_county_mcds_cnt.to_sql('countyMcdsCount',engine,if_exists='append',index=Fals
 df_county_mcds_lvl_cnt.to_sql('mcdsLvlCountyData',engine,if_exists='append',index=False)
 
 
-sql = "CREATE VIEW all_data as select p.fips, p.stname,p.ctyname, p.abbrev,p.popestimate2016, o.obesity_n, o.obesity_per,o.diab_n, o.diab_per, f.pop2010, f.ohu2010, f.medianfamilyincome, f.lapop20, f.lalowi20, f.lasnap20,f.tractlowi, f.tractsnap, f.lapop20_share, f.lalowi20_share, f.lasnap20_share, m.mccount from population p left join obeseDiabetes o on p.fips = o.fips left join foodDesert f on p.fips = f.fips left join countyMcdsCount m on p.fips = m.county_fips;"
+sql = "create table DATA_MCDS as select p.fips, p.stname,p.ctyname, p.abbrev,p.popestimate2016, o.obesity_n,o.obesity_per,o.diab_n, o.diab_per, f.pop2010, f.ohu2010, f.medianfamilyincome, f.lapop20,f.lalowi20, f.lasnap20, f.tractlowi, f.tractsnap, f.lapop20_share, f.lalowi20_share, f.lasnap20_share, m.mccount from population p left join obeseDiabetes o on p.fips = o.fips left join foodDesert f on p.fips = f.fips left join countyMcdsCount m on p.fips = m.county_fips;"
 		
 engine.execute(sql)
 """
+create table DATA_MCDS as 
 select p.fips, p.stname,p.ctyname, p.abbrev,p.popestimate2016, o.obesity_n, o.obesity_per,
 	o.diab_n, o.diab_per, f.pop2010, f.ohu2010, f.medianfamilyincome, f.lapop20, f.lalowi20, f.lasnap20, 
 	f.tractlowi, f.tractsnap, f.lapop20_share, f.lalowi20_share, f.lasnap20_share, m.mccount
