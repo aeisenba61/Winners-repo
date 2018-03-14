@@ -9,7 +9,7 @@ import pandas as pd
 
 df_obese_diabetes = pd.read_csv("../clean-data/obese_diab2013.csv", encoding = "ISO-8859-1")
 df_population = pd.read_csv("../clean-data/county_pop2010_2016.csv", encoding = "ISO-8859-1")
-#df_food_desert = pd.read_csv('../clean-data/')
+df_food_desert = pd.read_csv('../clean-data/cleaned_food_desert_data1.csv', encoding = "ISO-8859-1")
 
 # Sets an object to utilize the default declarative base in SQL Alchemy
 Base = declarative_base()
@@ -88,7 +88,7 @@ session = Session(bind=engine)
 #Append dfs to newly minted tables
 df_obese_diabetes.to_sql('obeseDiabetes',engine,if_exists='append', index=False)
 df_population.to_sql('population',engine,if_exists='append',index=False)
-#df_food_desert.to_sql('foodDesert',engine,if_exists='append',index=False)
+df_food_desert.to_sql('foodDesert',engine,if_exists='append',index=False)
 
 """
 sql = "select p.fips, p.stName, p.ctyName, p.abbrev,  p.popestimate2016, o.obesity_n, o.obesity_per, "
