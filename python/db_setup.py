@@ -132,6 +132,8 @@ select p.fips, p.stname,p.ctyname, p.abbrev,p.popestimate2016,
 		left join obeseDiabetes o on p.fips = o.fips
 		left join foodDesert f on p.fips = f.fips
 		left join countyMcdsCount m on p.fips = m.county_fips;
+
+
 """
 
 
