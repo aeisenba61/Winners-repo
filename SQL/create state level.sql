@@ -20,5 +20,6 @@ SELECT distinct
 	,sum(lasnap20_share) as lasnap20_share
 	,sum(popEstimate2016)/sum(mccount) as mcd_per_cap
 	,sum(mccount) as mcCount
+	,PRIMARY KEY(`stName`)
 	FROM DATA_MCDS
 	group by stName,Abbrev
