@@ -30,11 +30,10 @@ Base = automap_base()
 # Reflect tables
 Base.prepare(engine, reflect=True)
 
-inspector = inspect(engine)
-
-for table in inspector.get_table_names():
-    print(table)
-
+# See tables in db
+#inspector = inspect(engine)
+#for table in inspector.get_table_names():
+#    print(table)
 
 # Save to class
 County = Base.classes.DATA_MCDS
@@ -45,10 +44,10 @@ session = Session(engine)
 def __repr__(self):
     return '<McD %r>' % (self.name)
 
-## Homepage
-#@app.route("/")
-#def home():
-#    return render_template("index.html")
+# Homepage
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 ##Create a route that renders a list of the sample names
 #@app.route("/names")
@@ -65,14 +64,14 @@ def __repr__(self):
 #    return jsonify(names)
 #
 ## OTU
-@app.route("/otu")
-def description():
-    results = session.query(Otu.lowest_taxonomic_unit_found).all()
-    otu_results = []
-    for result in results:
-        otu_results.append(result[0])
-    return jsonify(otu_results)
-#
-#if __name__ == '__main__':
-#    port = int(os.environ.get('PORT', 5000))
-#    app.run(host='0.0.0.0', port = port, debug=True)
+#@app.route("/otu")
+#def description():
+#    results = session.query(Otu.lowest_taxonomic_unit_found).all()
+#    otu_results = []
+#    for result in results:
+#        otu_results.append(result[0])
+#    return jsonify(otu_results)
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port = port, debug=True)
