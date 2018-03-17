@@ -75,10 +75,10 @@ def counties():
                 "state_abbrev": [result[3] for result in results],
                 "obesity": [result[4] for result in results],
                 "diabetes": [result[5] for result in results],
-                "pov": [result[6] for result in results],
-                "snap": [result[7] for result in results],
+                "pov": [round(float(result[6]),1) for result in results],
+                "snap": [round(float(result[7]),1) for result in results],
                 "mcCount": [result[8] for result in results],
-                "mcd_per_cap": [result[9] for result in results]}
+                "mcd_per_cap": [float(result[9]) for result in results]}
 
     return jsonify(countydict)
 
@@ -108,10 +108,10 @@ def county_info():
     abbrev_list = [result[3] for result in results]
     ob_list = [result[4] for result in results]
     diab_list = [result[5] for result in results]
-    snap_list = [result[6] for result in results]
-    pov_list = [result[7] for result in results]
+    snap_list = [round(float(result[6]),1) for result in results]
+    pov_list = [round(float(result[7]),1) for result in results]
     mc_list = [result[8] for result in results]
-    mcd_cap_list = [result[9] for result in results]
+    mcd_cap_list = [float(result[9]) for result in results]
 
     county_info_dict = {}
 
@@ -150,12 +150,12 @@ def states():
 
     statedict = {"state_name": [result[0] for result in results],
                 "state_abbrev": [result[1] for result in results],
-                "obesity": [result[2] for result in results],
-                "diabetes": [result[3] for result in results],
-                "pov": [result[4] for result in results],
-                "snap": [result[5] for result in results],
-                "mcCount": [result[6] for result in results],
-                "mcd_per_cap": [result[7] for result in results]}
+                "obesity": [round(float(result[2]),1) for result in results],
+                "diabetes": [round(float(result[3]),1) for result in results],
+                "pov": [round(float(result[4]),1) for result in results],
+                "snap": [round(float(result[5]),1) for result in results],
+                "mcCount": [int(float(result[6])) for result in results],
+                "mcd_per_cap": [float(result[7]) for result in results]}
 
     return jsonify(statedict)
 
@@ -177,12 +177,12 @@ def state_info():
 
     state_list = [result[0] for result in results]
     abbrev_list = [result[1] for result in results]
-    ob_list = [result[2] for result in results]
-    diab_list = [result[3] for result in results]
-    pov_list = [result[4] for result in results]
-    snap_list = [result[5] for result in results]
-    mc_list = [result[6] for result in results]
-    mcd_cap_list = [result[7] for result in results]
+    ob_list = [round(float(result[2]),1) for result in results]
+    diab_list = [round(float(result[3]),1) for result in results]
+    pov_list = [round(float(result[4]),1) for result in results]
+    snap_list = [round(float(result[5]),2) for result in results]
+    mc_list = [int(float(result[6])) for result in results]
+    mcd_cap_list = [float(result[7]) for result in results]
 
     state_info_dict = {}
 
@@ -198,40 +198,6 @@ def state_info():
                                     }
 
     return jsonify(state_info_dict)
-
-# ##################################################################
-# # Vars organized by state
-# ##################################################################
-# @app.route("/state_info/<var>")
-# def state_var(var):
-#     query = f"State.{var}"
-#     results = session.query(State.stName, \
-#                             State.Abbrev, \
-#                             State.mcCount, \
-#                             State.mcd_per_cap, \
-#                             query) \
-#                      .order_by(State.stName)
-
-#     num_results = results.count()
-#     return jsonify(num_results)
-
-    # state_list = [result[0] for result in results]
-    # abbrev_list = [result[1] for result in results]
-    # mc_list = [result[2] for result in results]
-    # mcd_cap_list = [result[3] for result in results]
-    # query_list = [result[4] for result in results]
-
-    # state_info_dict = {}
-
-    # for i in range(0, 51):
-    #     state_info_dict[state_list[i]] = {
-    #                                 "state_abbrev": abbrev_list[i],
-    #                                 "mcCount": mc_list[i],
-    #                                 "mcd_per_cap": mcd_cap_list[i],
-    #                                 var: query_list[i]
-    #                                 }
-
-    # return jsonify(state_info_dict)
 
 
 
