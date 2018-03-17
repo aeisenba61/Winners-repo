@@ -44,33 +44,126 @@ session = Session(engine)
 def __repr__(self):
     return '<McD %r>' % (self.name)
 
+##################################################################
 # Homepage
+##################################################################
 @app.route("/")
 def home():
     return render_template("index.html")
 
-##Create a route that renders a list of the sample names
-#@app.route("/names")
-#def names_list():
-#    # Create inspector and connect it to the engine
-#    inspector = inspect(engine)
-#    # Collect the names of the tables within the db
-#    # tables = inspector.get_table_names()
-#    # using the inspector to print the column names of tables
-#    columns = inspector.get_columns('samples')
-#    names = []
-#    for column in columns[1:]:
-#        names.append(column['name'])
-#    return jsonify(names)
-#
-## OTU
-#@app.route("/otu")
-#def description():
-#    results = session.query(Otu.lowest_taxonomic_unit_found).all()
-#    otu_results = []
-#    for result in results:
-#        otu_results.append(result[0])
-#    return jsonify(otu_results)
+##################################################################
+# All county data
+##################################################################
+@app.route("/counties")
+def counties():
+    results = session.query(County.fips, \
+                            County.ctyName, \
+                            County.stName, \
+                            County.Abbrev, \
+                            County.obesity_per, \
+                            County.diab_per, \
+                            County.lapop20_share, \
+                            County.lalowi20_share, \
+                            County.lasnap20_share, \
+                            County.mccount, \
+                            County.mcd_per_cap)\
+                     .order_by(County.stName)
+    countydict = {"fips": [result[0] for result in results],
+                "county_name": [result[1] for result in results],
+                "state_name": [result[2] for result in results],
+                "state_abbrev": [result[3] for result in results],
+                "diabetes": [result[4] for result in results],
+                "obesity": [result[5] for result in results],
+                "food_des": [result[6] for result in results],  # lapop20_share
+                "pov": [result[7] for result in results],  # lalowi20_share
+                "snap": [result[8] for result in results],  # lasnap20_share
+                "mcCount": [result[9] for result in results],
+                "mcd_per_cap": [result[10] for result in results]}
+    return jsonify(countydict)
+
+##################################################################
+# Data organized by county
+##################################################################
+@app.route("/county_info")
+def county_info():
+    results = session.query(County.fips, \
+                            County.ctyName, \
+                            County.stName, \
+                            County.Abbrev, \
+                            County.obesity_per, \
+                            County.diab_per, \
+                            County.lapop20_share, \
+                            County.lalowi20_share, \
+                            County.lasnap20_share, \
+                            County.mccount, \
+                            County.mcd_per_cap)\
+                     .order_by(County.fips)\
+                     .limit(10)
+
+    num_results = results.count()
+
+    county_info_dict = {}
+
+    fips_list = [result[0] for result in results]
+    name_list = [result[1] for result in results]
+    state_list = [result[2] for result in results]
+    abbrev_list = [result[3] for result in results]
+    diab_list = [result[4] for result in results]
+
+
+#    county_info = dict.fromkeys([str(fips) for fips in fips_list], {
+#                                    "name": "test",
+#                                    "state_name": "test"})
+
+    county_info = dict.fromkeys([str(fips) for fips in fips_list], {
+                                    "name": [],
+                                    "state_name": []})
+
+    # for i in range(0,num_results):
+
+
+    return jsonify(county_info)
+#    countydict = dict.fromkeys(, {
+#                "county_name": ,
+#                "state_name": ,
+#                "state_abbrev": ,
+#                "diabetes": ,
+#                "obesity": [result[5] for result in results],
+#                "food_des": [result[6] for result in results],  # lapop20_share
+#                "pov": [result[7] for result in results],  # lalowi20_share
+#                "snap": [result[8] for result in results],  # lasnap20_share
+#                "mcCount": [result[9] for result in results],
+#                "mcd_per_cap": [result[10] for result in results]})
+
+
+
+##################################################################
+# All county data
+##################################################################
+@app.route("/states")
+def states():
+    results = session.query(State.stName, \
+                            State.Abbrev, \
+                            State.obesity_per, \
+                            State.diab_per, \
+                            State.lapop20_share, \
+                            State.lalowi20_share, \
+                            State.lasnap20_share, \
+                            State.mcCount, \
+                            State.mcd_per_cap)\
+                     .order_by(State.stName)
+    statedict = {"state_name": [result[0] for result in results],
+                "state_abbrev": [result[1] for result in results],
+                "diabetes": [result[2] for result in results],
+                "obesity": [result[3] for result in results],
+                "food_des": [result[4] for result in results],  # lapop20_share
+                "pov": [result[5] for result in results],  # lalowi20_share
+                "snap": [result[6] for result in results],  # lasnap20_share
+                "mcCount": [result[7] for result in results],
+                "mcd_per_cap": [result[8] for result in results]}
+    return jsonify(statedict)
+
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
