@@ -19,7 +19,7 @@ SELECT distinct
 	,avg(lalowi20_share) as lalowi20_share
 	,avg(lasnap20_share) as lasnap20_share
 	,sum(mccount)/sum(popEstimate2016) as mcd_per_cap
-	,sum(tractLOWI) /sum(ohu2010) * 100 as st_low_inc_pop_per
+	,sum(tractLOWI) /sum(pop2010) * 100 as st_low_inc_pop_per
 	,sum(tractSNAP) /sum(ohu2010) * 100 as st_snap_households_per
 	,sum(mccount) as mcCount
 --	,PRIMARY KEY(`stName`)
