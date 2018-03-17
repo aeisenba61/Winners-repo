@@ -24,7 +24,7 @@ select
 	,f.lasnap20_share
 	,m.mccount
 	,case when m.mccount is null or p.popestimate2016 = 0 then 0 else m.mccount/p.popestimate2016 end as mcd_per_cap
-	,PRIMARY KEY(`fips`)
+--	,PRIMARY KEY(`fips`)
 from population p 
 	left join obeseDiabetes o on p.fips = o.fips
 	left join foodDesert f on p.fips = f.fips
