@@ -7,11 +7,11 @@ from sqlalchemy import create_engine, func, Column, Integer, Float, String, Fore
 from sqlalchemy_utils import database_exists, create_database
 import pandas as pd
 
-df_obese_diabetes = pd.read_csv("../clean-data/obese_diab2013.csv", encoding = "ISO-8859-1")
-df_population = pd.read_csv("../clean-data/county_pop2010_2016.csv", encoding = "ISO-8859-1")
-df_food_desert = pd.read_csv('../clean-data/cleaned_food_desert_data1_lh.csv', encoding = "ISO-8859-1")
-df_county_mcds_cnt = pd.read_csv('../clean-data/county_count.csv', encoding = "ISO-8859-1")
-df_county_mcds_lvl_cnt = pd.read_csv('../clean-data/county_count_mcds_lvl.csv', encoding = "ISO-8859-1")
+df_obese_diabetes = pd.read_csv("../clean-data/Excel/obese_diab2013.csv", encoding = "ISO-8859-1")
+df_population = pd.read_csv("../clean-data/Excel/county_pop2010_2016.csv", encoding = "ISO-8859-1")
+df_food_desert = pd.read_csv('../clean-data/Excel/cleaned_food_desert_data1_lh.csv', encoding = "ISO-8859-1")
+df_county_mcds_cnt = pd.read_csv('../clean-data/Excel/county_count.csv', encoding = "ISO-8859-1")
+df_county_mcds_lvl_cnt = pd.read_csv('../clean-data/Excel/county_count_mcds_lvl.csv', encoding = "ISO-8859-1")
 
 # Sets an object to utilize the default declarative base in SQL Alchemy
 Base = declarative_base()
@@ -94,7 +94,7 @@ class McdsLvlCountyData(Base):
 
 
 #build engine
-engine = create_engine('sqlite:///mcdonalds.sqlite')
+engine = create_engine('sqlite:///../clean-data/SQL/mcdonalds.sqlite')
 if not database_exists(engine.url):
     create_database(engine.url)
 	
@@ -141,6 +141,10 @@ left join foodDesert f on p.fips = f.fips \
 left join countyMcdsCount m on p.fips = m.county_fips;"
 		
 engine.execute(sql)
+
+sql2 = "ALTER TABLE DATA_MCDS ADD PRIMARY KEY (fips);"
+engine.execute(sql2)
+
 """
 create table DATA_MCDS as 
 select p.fips, p.stname,p.ctyname, p.abbrev,p.popestimate2016, 
@@ -157,8 +161,6 @@ select p.fips, p.stname,p.ctyname, p.abbrev,p.popestimate2016,
 		left join obeseDiabetes o on p.fips = o.fips
 		left join foodDesert f on p.fips = f.fips
 		left join countyMcdsCount m on p.fips = m.county_fips;
-
-
 """
 
 
