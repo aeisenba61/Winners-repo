@@ -1,9 +1,11 @@
-var counties_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/stateOut.geojson';
+var states_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/stateOut.geojson';
+// var states_url_alt = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/produce%20geojson%20files/stateOut.js';
 
-d3.json(counties_url, function(error, countiesData){
+console.log(states_url)
+d3.json(states_url, function(error, statesData){
     if (error) throw error;
-    console.log(countiesData);
-    var map = L.map('map').setView([37.8, -96], 3);
+    console.log(statesData);
+    var map = L.map('stateMap').setView([37.8, -96], 3);
 
     L.tileLayer(
         "https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?" +
@@ -26,7 +28,7 @@ d3.json(counties_url, function(error, countiesData){
 
     function style(feature) {
         return {
-            fillColor: getColor(feature.properties.diab_per),
+            fillColor: getColor(feature.properties.stDiabPer),
             weight: 2,
             opacity: 1,
             color: 'white',
@@ -66,7 +68,7 @@ d3.json(counties_url, function(error, countiesData){
         });
     }
 
-    geojson = L.geoJson(countiesData, {
+    geojson = L.geoJson(statesData, {
         style: style,
         onEachFeature: onEachFeature
     }).addTo(map);
@@ -83,7 +85,7 @@ d3.json(counties_url, function(error, countiesData){
     info.update = function (props) {
         this._div.innerHTML = '<h4>US Diabetes Rate</h4>' +  (props ?
             '<b>' + props.name + '</b><br />' + props.diab_per + ' %'
-            : 'Hover over a county');
+            : 'Hover over a state');
     };
 
     info.addTo(map);
