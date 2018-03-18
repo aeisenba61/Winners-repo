@@ -1,17 +1,11 @@
-function donut(selected) {
+/////////////////////
+// Default
+/////////////////////
 
-// Incorporate selected variable
-
-    var var_n = `${selected}_n`;
-    var selected = `${selected}`;
-
-    var all_labels = {diabetes: "diabetic",
-                      obesity: "obese",
-                      pov: "low income",
-                      snap: "receiving SNAP"};
+// Donut
 
 
-// Format pie
+function donut() {
 
     var formatMcD = d3.format(".7f");
 
@@ -28,29 +22,27 @@ function donut(selected) {
     var arc = d3.arc()
         .padRadius(50);
 
-// JSON call
-
     d3.json("/state_info", function(error, response) {
 
         var response = Object.values(response).map(d => ({
             state: d.state_name,
             abbrev: d.state_abbrev,
             mcd_per_cap: d.mcd_per_cap,
-            var_n: d[selected],
-            sel_var: [{status: `% ${all_labels[selected]}`, n: d[selected]},
-                       {status: `% not ${all_labels[selected]}`, n: 100 - d[selected]}]
+            diab_n: d.diabetes,
+            diabetes: [{status: "% diabetic", n: d.diabetes},
+                       {status: "% not diabetic", n: 100 - d.diabetes}]
         }));
 
 
         radius.domain([0, d3.max(response, function(d) {return d.mcd_per_cap;})]);
-        color.domain([`% ${all_labels[selected]}`, `% not ${all_labels[selected]}`]);
+        color.domain(["% diabetic", "% not diabetic"]);
 
         var legend = d3.select("#donut").append("svg")
                 .attr("class", "legend")
                 .attr("width", 200)
                 .attr("height", 200)
             .selectAll("g")
-                .data([`% ${all_labels[selected]}`, `% not ${all_labels[selected]}`])
+                .data(["% diabetic", "% not diabetic"])
             .enter().append("g")
                 .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
         legend.append("rect")
@@ -92,7 +84,7 @@ function donut(selected) {
             .attr("class", "label-value")
             .attr("x", 0)
             .attr("dy", "1.7em")
-            .text(function(d) { return d.var_n + `% ${all_labels[selected]}`; });
+            .text(function(d) { return d.diab_n + "% diabetic"; });
 
         function multiple(d) {
             var r = radius(d.mcd_per_cap);
@@ -104,37 +96,17 @@ function donut(selected) {
                 .attr("transform", "translate(" + r + "," + r + ")");
 
             var arcs = svg.selectAll(".arc")
-                .data(function(d) { return pie(d.sel_var); })
+                .data(function(d) { return pie(d.diabetes); })
               .enter().append("path")
                 .attr("class", "arc")
                 .attr("d", arc.outerRadius(r).innerRadius(r * 0.6))
                 .style("fill", function(d) { return color(d.data.status); });
 
       }
+
+
     });
+
 }
 
-/////////////////////
-// Default donut is diabetes
-/////////////////////
-
-donut("diabetes");
-
-
-/////////////////////
-// Update
-/////////////////////
-
-function optionChanged(new_var) {
-
-/////////////////////
-// Delete old
-/////////////////////
-
-    var svgArea = d3.selectAll("svg");
-    if (!svgArea.empty()) {
-        svgArea.remove();
-    }
-
-    donut(new_var);
-}
+donut();
