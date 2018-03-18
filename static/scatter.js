@@ -53,15 +53,15 @@ d3.json("http://localhost:5000/state_info", function(err, stData) {
   console.log(dataAttr)
   console.log(dataMcd)
   // Create scale functions
-  var yLinearScale = d3.scale.linear()
+  var yLinearScale = d3.scaleLinear()
     .range([height, 0]);
 
-  var xLinearScale = d3.scale.linear()
+  var xLinearScale = d3.scaleLinear()
     .range([0, width]);
 
   // Create axis functions
-  var bottomAxis = d3.svg.axis().scale(xLinearScale).orient("bottom");
-  var leftAxis = d3.svg.axis().scale(yLinearScale).orient("left");
+  var bottomAxis = d3.axisBottom(xLinearScale);
+  var leftAxis = d3.axisLeft(yLinearScale);
 
   // Scale the domain
   xLinearScale.domain([0, d3.max(dataMcd)]);
@@ -69,11 +69,11 @@ d3.json("http://localhost:5000/state_info", function(err, stData) {
 
   var toolTip = d3.tip()
     .attr("class", "tooltip")
-    .offset([80, -60])
+    .offset([-25, -10])
     .html(function(data,index) {
       var stAbbrev = stData[index].state_abbrev;
       var mcdCount = +stData[index].mccount;
-      return (stAbbrev + "<hr><br> McDonalds Count: " + mcdCount + "<br> "+ dataPoint +": " + dataAttr[index]);
+      return (stAbbrev + "<hr>McDonalds Count: " + mcdCount + "<br> "+ dataPoint +": " + dataAttr[index]);
     });
 
   chart.call(toolTip);
@@ -87,8 +87,10 @@ d3.json("http://localhost:5000/state_info", function(err, stData) {
       .attr("cy", function(data, index) {
         return yLinearScale(dataAttr[index]);
       })
-      .attr("r", "20")
-      .attr("fill", "blue")
+      .attr("r", "10")
+      .attr("fill", "#dd1021")
+	  .attr("stroke","#ffc300")
+	  .attr("opacity","0.8")
       .on("click", function(data, index) {
         toolTip.show(data);
       })
