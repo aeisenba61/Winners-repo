@@ -1,3 +1,7 @@
+/////////////////////
+// Render donut
+/////////////////////
+
 function donut(selected) {
 
 // Incorporate selected variable
@@ -41,14 +45,17 @@ function donut(selected) {
                        {status: `% not ${all_labels[selected]}`, n: 100 - d[selected]}]
         }));
 
+// Set domains
 
         radius.domain([0, d3.max(response, function(d) {return d.mcd_per_cap;})]);
         color.domain([`% ${all_labels[selected]}`, `% not ${all_labels[selected]}`]);
 
-        var legend = d3.select("#donut").append("svg")
+// Create legend
+
+        var legend = d3.select("#donut-legend").append("svg")
                 .attr("class", "legend")
-                .attr("width", 200)
-                .attr("height", 200)
+                .attr("width", 400)
+                .attr("height", 100)
             .selectAll("g")
                 .data([`% ${all_labels[selected]}`, `% not ${all_labels[selected]}`])
             .enter().append("g")
@@ -69,6 +76,8 @@ function donut(selected) {
             .attr("class", "pie")
             .each(multiple)
           .select("g");
+
+// Add labels for donuts
 
         var label = svg.append("text")
             .attr("class", "label");
@@ -93,6 +102,8 @@ function donut(selected) {
             .attr("x", 0)
             .attr("dy", "1.7em")
             .text(function(d) { return d.var_n + `% ${all_labels[selected]}`; });
+
+// Add donuts
 
         function multiple(d) {
             var r = radius(d.mcd_per_cap);
@@ -127,14 +138,12 @@ donut("diabetes");
 
 function optionChanged(new_var) {
 
-/////////////////////
 // Delete old
-/////////////////////
-
     var svgArea = d3.selectAll("svg");
     if (!svgArea.empty()) {
         svgArea.remove();
     }
 
+// Rerun donut
     donut(new_var);
 }

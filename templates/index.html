@@ -65,7 +65,7 @@
   <select id="selDataset" onchange="optionChanged(this.value)">
       <option disabled>Health</option>
       <option value = "diabetes">&nbsp;&nbsp;% diabetic adults</option>
-      <option value = "obese">&nbsp;&nbsp;% obese adults</option>
+      <option value = "obesity">&nbsp;&nbsp;% obese adults</option>
       <option disabled>Poverty</option>
       <option value = "snap">&nbsp;&nbsp;% households receiving SNAP benefits</option>
       <option value = "pov">&nbsp;&nbsp;% low income population</option>
@@ -75,26 +75,39 @@
 
 
 
+<!-- I think this is old but not sure -->
+
+<!-- Choropleth -->
+<!-- <div class = "container">
+  <div id = "map" style=   "width: 600; height: 400px;"></div>
+</div>
+ -->
+
+
+<!-- Choropleth -->
+<div class = "container">
+  <div id = "countyMap" style=   "width: 600; height: 400px;"></div>
+</div>
 
 <div class = "container">
-<!-- Choropleth -->
-<!-- <div id = "map" style=   "width: 600; height: 400px;"></div> -->
-<div class = "container">
-<!-- Choropleth -->
-<div id = "countyMap" style=   "width: 600; height: 400px;"></div>
-<div class = "container">
-<div id = "stateMap" style=   "width: 600; height: 400px;"></div>
+  <div id = "stateMap" style=   "width: 600; height: 400px;"></div>
+</div>
 
 
 
 <!-- Scatterplot -->
-<div id = "scatter"></div>
+<div class = "container">
+  <div id = "scatter"></div>
+</div>
 
 
 
 
 <!-- Donuts -->
-<div id = "donut"></div>
+<div class = "container">
+  <div id = "donut-legend"></div>
+  <div id = "donut"></div>
+</div>
 
 
 
@@ -128,9 +141,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 <script src="{{ url_for('static', filename='donut.js') }}"></script>
-<!-- <script src="{{ url_for('static', filename='scatter.js') }}"></script> -->
-<!-- <script src="{{ url_for('static', filename='donut.js') }}"></script> -->
 <script src="{{ url_for('static', filename='scatter.js') }}"></script>
 <script src="{{ url_for('static', filename='stateMap.js') }}"></script>
 <script src="{{ url_for('static', filename='countyMap.js') }}"></script>
