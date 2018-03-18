@@ -1,4 +1,4 @@
-var counties_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/countyOut.geojson';
+var counties_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/stateOut.geojson';
 
 d3.json(counties_url, function(error, countiesData){
     if (error) throw error;
