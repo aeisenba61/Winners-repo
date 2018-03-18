@@ -22,7 +22,7 @@ app = Flask(__name__)
 #################################################
 
 from flask_sqlalchemy import SQLAlchemy
-engine = create_engine("sqlite:///python/mcdonalds.sqlite")
+engine = create_engine("sqlite:///clean-data//SQL/mcdonalds.sqlite")
 
 # Reflecting db into a new model
 Base = automap_base()
