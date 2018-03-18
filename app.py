@@ -188,6 +188,7 @@ def state_info():
 
     for i in range(0, 51):
         state_info_dict[state_list[i]] = {
+                                    "state_name": state_list[i],
                                     "state_abbrev": abbrev_list[i],
                                     "diabetes": diab_list[i],
                                     "obesity": ob_list[i],

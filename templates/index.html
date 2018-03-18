@@ -7,6 +7,30 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>McDonalds Viz</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+/*      svg {
+      padding: 10px 0 0 10px;
+    }*/
+
+    .legend {
+      vertical-align: top;
+      padding: 75px 0 50px 20px;
+    }
+
+    .label {
+      text-anchor: middle;
+    }
+
+    .label-name {
+      font-weight: bold;
+      text-decoration: underline;:
+    }
+
+    .label-value {
+      font-weight: normal;
+    }
+
+  </style>
 </head>
 
 <body>
@@ -97,6 +121,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="{{ url_for('static', filename='donut.js') }}"></script>
-<script src="{{ url_for('static', filename='scatter.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='scatter.js') }}"></script> -->
 
 </html>
