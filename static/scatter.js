@@ -24,8 +24,6 @@ function renderScatter(selected) {
                       obesity: "obese",
                       pov: "low income",
                       snap: "receiving SNAP"};
-  
-  
 
 
 // Scatter stuff
