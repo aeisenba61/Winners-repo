@@ -1,0 +1,29 @@
+.legend {
+  vertical-align: top;
+  padding: 75px 0 50px 20px;
+}
+
+.label {
+  text-anchor: middle;
+}
+
+.label-name {
+  font-weight: bold;
+  text-decoration: underline;:
+}
+
+.label-value {
+  font-weight: normal;
+}
+
+.tooltip {
+  position: relative;
+  width: 120px;
+  height: 60px;
+  padding: 3px;
+  font: 11px sans-serif;
+  color: black;
+  text-align: middle;
+  background: #ffc300;
+  border: 0;
+}
