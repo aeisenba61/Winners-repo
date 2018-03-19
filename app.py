@@ -200,8 +200,20 @@ def state_info():
 
     return jsonify(state_info_dict)
 
+##################################################################
+@app.route("/county")
+def county():
+    return render_template("county.html")
+
+##################################################################
+@app.route("/state")
+def state():
+    return render_template("state.html")
+
+##################################################################  
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5001))
+    
     app.run(host='0.0.0.0', port = port, debug=True)

@@ -10,12 +10,9 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.7.3/d3.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.7.3/d3.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
-  <!-- Our CSSs -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/styleStateMap.css') }}" >
+
   <style>
 
     .legend {
@@ -81,46 +78,14 @@
 </div>
 
 
-
-<!-- original try for county and state choropleths -->
-<div class = "container">
-  <div id = "countyMap" style=   "width: 600; height: 400px;"></div>
-</div>
-
-<div class = "container">
-  <div id = "stateMap" style="width: 600; height: 400px;"></div>
-</div>
-
-
-<!-- Second try for choropleths -->
-<!-- <div class = "container">
-    <iframe id= "countyMap" sandbox="allow-popups allow-scripts allow-forms allow-same-origin" marginwidth="0" marginheight="0" style="width: 1000; height:500px;" scrolling="no" src="../static/countyMap.js"></iframe>
-</div> -->
-
-<!-- <div class = "container">
-    <iframe id= "stateMap" sandbox="allow-popups allow-scripts allow-forms allow-same-origin" marginwidth="0" marginheight="0" style="width: 1000; height:500px;" scrolling="no" src="../static/stateMap.js"></iframe>
-</div> -->
-
-<!-- Third try for choropleths -->
-<!-- <div class="iframeContainer" style="background-color: #5CDB95;width: 800; height:500px; ">
-  <iframe src="http://127.0.0.1:5000/templates/county.html" scrolling= "no" frameBorder="0" align="center"></iframe>
-</div> -->
-
-<!-- <div class="iframeContainer" style="background-color: #5CDB95;width: 800; height:500px; ">
-  <iframe src="../state.html" scrolling= "no" frameBorder="0" align="center"></iframe>
-</div> -->
-
-<!-- Fourth try for choropleths -->
-<!-- <div class="iframeContainer" style="background-color: #5CDB95;width: 800; height:500px; ">
-  <iframe src="http://127.0.0.1:5000/templates/county.html" style="width:100%;height:100%;overflow:auto" name="mycountyiframe" id="countyMap" onLoad="injectCountyJS()" >IFrame is not supported</iframe>
+<!-- Choropleths -->
+<div class="iframeContainer" style="background-color: #5CDB95;width: 800; height:500px; ">
+  <iframe src="/county" scrolling= "no" frameBorder="0" align="center"></iframe>
 </div>
 
 <div class="iframeContainer" style="background-color: #5CDB95;width: 800; height:500px; ">
-  <iframe src="http://127.0.0.1:5000/templates/county.html" style="width:100%;height:100%;overflow:auto" name="mystateiframe" id="stateMap" onLoad="injectStateJS()" >IFrame is not supported</iframe>
-</div> -->
-
-
-
+  <iframe src="/state" scrolling= "no" frameBorder="0" align="center"></iframe>
+</div>
 
 <!-- Scatterplot -->
 <div class = "container">
@@ -161,27 +126,6 @@
     </div>
 </div>
 
-
-<!-- for fourth choropleth try -->
-<!-- <script>
-  function injectStateJS() {
-        var iFrameHead = window.frames["mystateiframe"].document.getElementsByTagName("head")[0];         
-        var myscript = document.createElement('script');
-        myscript.type = 'text/javascript';
-        myscript.src = '../static/stateMap.js'; // replace this with your SCRIPT
-        iFrameHead.appendChild(myscript);
-}
-
-  function injectCountyJS() {
-        var iFrameHead = window.frames["mycountyiframe"].document.getElementsByTagName("head")[0];         
-        var myscript = document.createElement('script');
-        myscript.type = 'text/javascript';
-        myscript.src = '../static/countyMap.js'; // replace this with your SCRIPT
-        iFrameHead.appendChild(myscript);
-}
-
-</script> -->
-
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -189,10 +133,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
 <script src="{{ url_for('static', filename='donut.js') }}"></script>
 <script src="{{ url_for('static', filename='scatter.js') }}"></script>
-<script src="{{ url_for('static', filename='stateMap.js') }}"></script>
-<!-- <script src="{{ url_for('static', filename='countyMap.js') }}"></script> -->
+
 
 </html>

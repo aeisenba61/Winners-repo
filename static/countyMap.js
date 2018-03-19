@@ -1,7 +1,7 @@
 var county_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/countyOut.geojson';
 // var county_url_alt = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/produce%20geojson%20files/countyOut.js';
 
-console.log(county_url)
+console.log(county_url);
 d3.json(county_url, function(error, countyData){
     if (error) throw error;
     console.log(countyData);
