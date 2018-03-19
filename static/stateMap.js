@@ -1,3 +1,7 @@
+
+var states = new L.layerGroup();
+var mcDonalds = new L.layerGroup();
+
 var states_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/stateOut.geojson';
 // var states_url_alt = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/produce%20geojson%20files/stateOut.js';
 
@@ -15,11 +19,11 @@ var map = L.map("stateMap", {
 
 mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson'
 
-d3.json(mcDs_url, function(error, mcData){
-    if (error) throw error;
-    console.log(mcData);
-    markers = L.markers(mcData)
-}).addTo(map);
+d3.json(mcDs_url, function(mcData){
+    var markers
+    markers = L.marker(mcData).addTo(map);
+});
+
 
 d3.json(states_url, function(error, statesData){
     if (error) throw error;

@@ -3,12 +3,6 @@
          { "type" : "Feature",
         "geometry" : {
             "type" : "Point",
-            "coordinates" : [longitude, latitude]},
-        "properties" : { "storeNumber" : storeNumber, "address" : "address", "city" : "city", "state": "state"}
-        },
-         { "type" : "Feature",
-        "geometry" : {
-            "type" : "Point",
             "coordinates" : [-80.140924, 25.789141]},
         "properties" : { "storeNumber" : 14372, "address" : "1601 ALTON RD", "city" : "MIAMI BEACH", "state": "FL"}
         },
