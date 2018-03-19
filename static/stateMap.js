@@ -1,29 +1,48 @@
 var states_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/stateOut.geojson';
 // var states_url_alt = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/produce%20geojson%20files/stateOut.js';
 
-console.log(states_url)
+var outdoors = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?" +
+        "access_token=pk.eyJ1Ijoia2pnMzEwIiwiYSI6ImNpdGRjbWhxdjAwNG0yb3A5b21jOXluZTUifQ." +
+        "T6YbdDixkOBWH_k9GbS8JQ");
+
+var map = L.map("stateMap", {
+      center: [37.8, -96],
+      zoom: 3,
+      // noWrap: true,
+      // maxBounds: [[90,-180], [-90, 180]],
+      layers: [outdoors],       
+});
+
+mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson'
+
+d3.json(mcDs_url, function(error, mcData){
+    if (error) throw error;
+    console.log(mcData);
+    markers = L.markers(mcData)
+}).addTo(map);
+
 d3.json(states_url, function(error, statesData){
     if (error) throw error;
     console.log(statesData);
-    var map = L.map('stateMap').setView([37.8, -96], 3);
+    // var map = L.map('stateMap').setView([37.8, -96], 3);
 
-    L.tileLayer(
-        "https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?" +
-        "access_token=pk.eyJ1Ijoia2pnMzEwIiwiYSI6ImNpdGRjbWhxdjAwNG0yb3A5b21jOXluZTUifQ." +
-        "T6YbdDixkOBWH_k9GbS8JQ"
-    );
+    // L.tileLayer(
+    //     "https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?" +
+    //     "access_token=pk.eyJ1Ijoia2pnMzEwIiwiYSI6ImNpdGRjbWhxdjAwNG0yb3A5b21jOXluZTUifQ." +
+    //     "T6YbdDixkOBWH_k9GbS8JQ"
+    // );
 
     var geojson;
 
     function getColor(d) {
-        return d > 70 ? '#800026' :
-            d > 60  ? '#BD0026' :
-            d > 50  ? '#E31A1C' :
-            d > 40  ? '#FC4E2A' :
-            d > 30   ? '#FD8D3C' :
-            d > 20   ? '#FEB24C' :
-            d > 10   ? '#FED976' :
-                        '#FFEDA0';
+        return d > 70   ? '#800026' :
+            d > 60      ? '#BD0026' :
+            d > 50      ? '#E31A1C' :
+            d > 40      ? '#FC4E2A' :
+            d > 30      ? '#FD8D3C' :
+            d > 20      ? '#FEB24C' :
+            d > 10      ? '#FED976' :
+                          '#FFEDA0';
     }
 
     function style(feature) {

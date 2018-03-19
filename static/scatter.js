@@ -24,7 +24,7 @@ d3.select("#scatter")
   .attr("class", "tooltip")
   .style("opacity", 0); 
  
-d3.json("http://localhost:5000/state_info", function(err, stData) {
+d3.json("/state_info", function(err, stData) {
   if (err) throw err;
   console.log(stData);
   console.log(Object.keys(stData).length);
