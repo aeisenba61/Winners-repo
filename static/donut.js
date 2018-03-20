@@ -130,20 +130,3 @@ function donut(selected) {
 /////////////////////
 
 donut("diabetes");
-
-
-/////////////////////
-// Update
-/////////////////////
-
-function optionChanged(new_var) {
-
-// Delete old
-    var svgArea = d3.selectAll("svg");
-    if (!svgArea.empty()) {
-        svgArea.remove();
-    }
-
-// Rerun donut
-    donut(new_var);
-}

@@ -70,7 +70,7 @@ function renderScatter(selected) {
 		dataAbbr.push(state.state_abbrev);
 		dataCnt.push(state.mcCount);
     };*/
-	
+
 	var stData = Object.values(stData).map(d => ({
 	state: d.state_name,
 	abbrev: d.state_abbrev,
@@ -78,7 +78,7 @@ function renderScatter(selected) {
 	sel_var: d[selected]
     }));
 
-	
+
     // Create scale functions
     var yLinearScale = d3.scaleLinear()
       .range([height, 0]);
@@ -93,7 +93,7 @@ function renderScatter(selected) {
     // Scale the domain
     xLinearScale.domain([d3.min(stData, function(d) {return d.mcd_per_cap;}) - .000001, d3.max(stData, function(d) {return d.mcd_per_cap;}) + .000001]);
     yLinearScale.domain([0, d3.max(stData, function(d) {return d.sel_var;}) + 2]);
-	
+
 	// Format McD per capita
     var formatMcD = d3.format(".7f");
 
@@ -160,22 +160,4 @@ function renderScatter(selected) {
       .text("McDonald's Per Capita");
   });
 
-}
-
-
-
-/////////////////////
-// Update
-/////////////////////
-
-function optionChanged(new_var) {
-
-// Delete old
-    var svgArea = d3.selectAll("svg");
-    if (!svgArea.empty()) {
-        svgArea.remove();
-    }
-
-// Rerun
-    renderScatter(new_var);
 }
