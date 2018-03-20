@@ -58,7 +58,7 @@ function renderScatter(selected) {
 
     if (err) throw err;
 
-	var dataAttr = [];
+	/*var dataAttr = [];
     var dataMcd = [];
     var dataAbbr = [];
     var dataCnt = [];
@@ -69,7 +69,14 @@ function renderScatter(selected) {
     	dataAttr.push(state[selected]);
 		dataAbbr.push(state.state_abbrev);
 		dataCnt.push(state.mcCount);
-    };
+    };*/
+	
+	var stData = Object.values(stData).map(d => ({
+	state: d.state_name,
+	abbrev: d.state_abbrev,
+	mcd_per_cap: d.mcd_per_cap,
+	sel_var: d[selected]
+    }));
 
 	
     // Create scale functions
@@ -84,40 +91,44 @@ function renderScatter(selected) {
     var leftAxis = d3.axisLeft(yLinearScale);
 
     // Scale the domain
-    xLinearScale.domain([d3.min(dataMcd) - .000001, d3.max(dataMcd) + .000001]);
-    yLinearScale.domain([0, d3.max(dataAttr) + 2]);
+    xLinearScale.domain([d3.min(stData, function(d) {return d.mcd_per_cap;}) - .000001, d3.max(stData, function(d) {return d.mcd_per_cap;}) + .000001]);
+    yLinearScale.domain([0, d3.max(stData, function(d) {return d.sel_var;}) + 2]);
+	
+	// Format McD per capita
+    var formatMcD = d3.format(".7f");
 
     var toolTip = d3.tip()
       .attr("class", "tooltip")
-      .offset([-25, -40])
-      .html(function(d,i) {
-        var stAbbrev = dataAbbr[i];
-        var mcdCount = +dataCnt[i];
-		var stAttr = +dataAttr[i]
-        return (stAbbrev + "<hr>McDonalds Count: " + mcdCount + "<br> "+ dataPoint +": " + stAttr);
+      .offset([-3, 0])
+      .html(function(stData) {
+        var stAbbrev = stData.abbrev;
+        var mcdCount = formatMcD(stData.mcd_per_cap);
+        var sel_prop = stData.sel_var;
+        return ("<b><u>" + stAbbrev + "</u></b><br>" + "McDonalds per capita: " + mcdCount + "<br>% "+ all_labels[selected] +": " + sel_prop);
       });
 
     chart.call(toolTip);
 
     chart.selectAll("circle")
-      .data(dataMcd)
+      .data(stData)
       .enter().append("circle")
         .attr("cx", function(data, index) {
-          return xLinearScale(dataMcd[index]);
+          return xLinearScale(data.mcd_per_cap);
         })
         .attr("cy", function(data, index) {
-          return yLinearScale(dataAttr[index]);
+          return yLinearScale(data.sel_var);
         })
         .attr("r", "10")
         .attr("fill", "#dd1021")
 		.attr("stroke","#ffc300")
 		.attr("opacity","0.8")
-		.on("click", function(d) {
-          toolTip.show(d);
+		.on("click", function(data) {
+		  toolTip.show(data);
+          d3.select(this).style("fill", "#ffc300");
         })
-        // onmouseout event
-        .on("mouseout", function(d) {
-          toolTip.hide(d);
+        .on("mouseout", function(data) {
+          toolTip.hide(data);
+          d3.select(this).style("fill", "#dd1021");
         });
 
     chart.append("g")
