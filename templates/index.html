@@ -55,25 +55,31 @@
 
 
 <!-- Choropleths -->
-<div class = "container"> 
-  <div class="row" align="center">County Map<br>
+<div class = "container">
+  <div class="row" align="center"><h1><b>County Map</b></h1>
+    <p align = "left">McDonalds locations are plotted against a <b>choropleth map</b> in which darker colors indicate a higher proportion of the county population reporting the variable of interest.</p>
       <iframe sandbox="allow-popups allow-scripts allow-forms allow-same-origin" src="/county" style="width:1000px; height:500px;" marginwidth="0" marginheight="0"  scrolling="no"></iframe>
   </div>
 </div>
 
-<div class = "container"> 
-  <div class="row" align="center">State Map<br>
+<div class = "container">
+  <div class="row" align="center"><h1><b>State Map</b></h1>
+    <p align = "left">McDonalds locations are plotted against a <b>choropleth map</b> in which darker colors indicate a higher proportion of the state population reporting the variable of interest.</p>
       <iframe sandbox="allow-popups allow-scripts allow-forms allow-same-origin" src="/state" style="width:1000px; height:500px;" marginwidth="0" marginheight="0"  scrolling="no"></iframe>
   </div>
 </div>
 
 <!-- Scatterplot -->
 <div class = "container">
+    <h1 align = "center"><b>Scatterplot</b></h1>
+    <p>A <b>scatterplot</b> with the number of McDonalds per capita on the x-axis and the proportion of the state population reporting the variable of interest on the y-axis.</p>
   <div id = "scatter"></div>
 </div>
 
 <!-- Donuts -->
 <div class = "container">
+    <h1 align = "center"><b>Sized Donut Multiples</b></h1>
+    <p>Each state is a <b>donut chart</b>, sized and arranged in descending order by the number of McDonalds per capita. The arc in the donut represents the proportion of the state populating reporting the variable of interest.</p>
   <div id = "donut-legend"></div>
   <div id = "donut"></div>
 </div>
