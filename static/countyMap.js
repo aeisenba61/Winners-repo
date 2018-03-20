@@ -16,16 +16,15 @@ d3.json(county_url, function(error, countyData){
     var geojson;
 
     function getColor(d) {
-        return d > 70 ? '#800026' :
-            d > 60  ? '#BD0026' :
-            d > 50  ? '#E31A1C' :
-            d > 40  ? '#FC4E2A' :
-            d > 30   ? '#FD8D3C' :
-            d > 20   ? '#FEB24C' :
-            d > 10   ? '#FED976' :
-                        '#FFEDA0';
-    }
-
+        return  d > 40 ? '#800026' :
+                d > 35 ? '#BD0026' :
+                d > 30 ? '#E31A1C' :
+                d > 25 ? '#FC4E2A' :
+                d > 20 ? '#FD8D3C' :
+                d > 15 ? '#FEB24C' :
+                d > 10 ? '#FED976' :
+                         '#FFEDA0';
+    }   
     function style(feature) {
         return {
             fillColor: getColor(feature.properties.diab_per),
@@ -103,7 +102,7 @@ d3.json(county_url, function(error, countyData){
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-            grades = [0, 10, 20, 30, 40, 50, 60, 70],
+            grades = [0, 10, 20, 30, 40],
             labels = [];
 
         // loop through our density intervals and generate a label with a colored square for each interval

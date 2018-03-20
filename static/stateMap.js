@@ -1,47 +1,40 @@
-
-
 var states_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/stateOut.geojson';
-var outdoors = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?" +   "access_token=pk.eyJ1Ijoia2pnMzEwIiwiYSI6ImNpdGRjbWhxdjAwNG0yb3A5b21jOXluZTUifQ." +
-        "T6YbdDixkOBWH_k9GbS8JQ");
-var satMap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}?" +
-  "access_token=pk.eyJ1IjoiYmJhbGVzMTEiLCJhIjoiY2plYmptdmFwMGRydzJybzdpdzBxazk1aiJ9.ASSE0faIpkFAu87MR5RM0g");
 
-var statesLayer = new L.layerGroup();
+var dark = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?" +
+  "access_token=pk.eyJ1IjoiaXJvbmJlYXJkIiwiYSI6ImNpbDhqOXdmeTBjc3N2am0yd3JneWo2NDMifQ." +
+  "wGNLjMdRNK2PNjMwPtTVDA");
+
+var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?" +
+  "access_token=pk.eyJ1IjoiaXJvbmJlYXJkIiwiYSI6ImNpbDhqOXdmeTBjc3N2am0yd3JneWo2NDMifQ." +
+  "wGNLjMdRNK2PNjMwPtTVDA");
 
 var map = L.map("stateMap", {
       center: [37.8, -96],
       zoom: 3,
       // noWrap: true,
-      maxBounds: [[90,-180], [-90, 180]],
-      layers: [outdoors]     
+      // maxBounds: [[90,-180], [-90, 180]],
+      layers: [dark],       
 });
 
-//////////////// state borders ///////////////
+var statesLayer = new L.layerGroup();
 
-d3.json(states_url, function(error, statesData){
+d3.json(states_url, function(error, stateData){
     if (error) throw error;
-    console.log(statesData);
-    // var map = L.map('stateMap').setView([37.8, -96], 3);
+    console.log(stateData);
 
-    // L.tileLayer(
-    //     "https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?" +
-    //     "access_token=pk.eyJ1Ijoia2pnMzEwIiwiYSI6ImNpdGRjbWhxdjAwNG0yb3A5b21jOXluZTUifQ." +
-    //     "T6YbdDixkOBWH_k9GbS8JQ"
-    // );
 
     var geojson;
 
     function getColor(d) {
-        return d > 70   ? '#800026' :
-            d > 60      ? '#BD0026' :
-            d > 50      ? '#E31A1C' :
-            d > 40      ? '#FC4E2A' :
-            d > 30      ? '#FD8D3C' :
-            d > 20      ? '#FEB24C' :
-            d > 10      ? '#FED976' :
-                          '#FFEDA0';
-    }
-
+        return  d > 40 ? '#800026' :
+                d > 35 ? '#BD0026' :
+                d > 30 ? '#E31A1C' :
+                d > 25 ? '#FC4E2A' :
+                d > 20 ? '#FD8D3C' :
+                d > 15 ? '#FEB24C' :
+                d > 10 ? '#FED976' :
+                         '#FFEDA0';
+    }   
     function style(feature) {
         return {
             fillColor: getColor(feature.properties.stDiabPer),
@@ -63,9 +56,6 @@ d3.json(states_url, function(error, statesData){
             fillOpacity: 0.7
         });
 
-       /* if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-            layer.bringToFront();
-        }*/
     }
 
     function resetHighlight(e) {
@@ -76,85 +66,71 @@ d3.json(states_url, function(error, statesData){
         map.fitBounds(e.target.getBounds());
     }
 
-    L.geoJson(statesData, {
+    function onEachFeature(feature, layer) {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            click: zoomToFeature
+        });
+    }
+
+    geojson = L.geoJson(stateData, {
         style: style,
-        onEachFeature: function onEachFeature(feature, layer) {
-            layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-                click: zoomToFeature
-            });
-        }
+        onEachFeature: onEachFeature
     }).addTo(statesLayer)
-    statesLayer.addto(map)
-});
+    statesLayer.addTo(map);
 
-var info = L.control();
+    var info = L.control();
 
-info.onAdd = function (map) {
-    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-    this.update();
-    return this._div;
-};
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+        this.update();
+        return this._div;
+    };
 
-// method that we will use to update the control based on feature properties passed
-info.update = function (props) {
-    this._div.innerHTML = '<h4>US Diabetes Rate</h4>' +  (props ?
-        '<b>' + props.name + '</b><br />' + props.diab_per + ' %'
-        : 'Hover over a state');
-};
+    // method that we will use to update the control based on feature properties passed
+    info.update = function (props) {
+        this._div.innerHTML = '<h4>US Diabetes Rate</h4>' +  (props ?
+            '<b>' + props.name + '</b><br />' + props.stDiabPer + ' %'
+            : 'Hover over a state');
+    };
 
-info.addTo(map);
+    info.addTo(map);
 
-function highlightFeature(e) {
-    info.update(layer.feature.properties);
-}
-
-function resetHighlight(e) {
-    info.update();
-}
-
-var legend = L.control({position: 'bottomright'});
-
-
-
-legend.onAdd = function (map) {
-    function getColor(d) {
-    return d > 70   ? '#800026' :
-        d > 60      ? '#BD0026' :
-        d > 50      ? '#E31A1C' :
-        d > 40      ? '#FC4E2A' :
-        d > 30      ? '#FD8D3C' :
-        d > 20      ? '#FEB24C' :
-        d > 10      ? '#FED976' :
-                      '#FFEDA0';
+    function highlightFeature(e) {
+        info.update(layer.feature.properties);
     }
 
-    var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, 10, 20, 30, 40, 50, 60, 70],
-        labels = [];
-
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    function resetHighlight(e) {
+        info.update();
     }
 
-    return div;
-};
+    var legend = L.control({position: 'bottomright'});
 
-legend.addTo(map);
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'info legend'),
+            grades = [0, 10, 20, 30, 40],
+            labels = [];
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+        }
+
+        return div;
+    };
+
+    legend.addTo(map);
+})
 
 //////////////// McDonalds Markers ///////////////
 
 var mcDonalds = new L.layerGroup();
 var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson'
 var icon_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/images/McDs_Golden_Arches.png'
-
-// d3.json(mcDs_url, function(mcData){
-//     createFeatures(data.features)
-// });
 
 
 var mcIcon = L.icon({
@@ -175,39 +151,19 @@ function onEachFeature(feature, layer) {
     layer.bindPopUp("<h3>McDonalds</h3><hr><p>City:" + feature.properties.city +", " + feature.properties.state)
 }
 
-
-// function createFeatures()
-//     function onEachFeature(feature, layer) {
-//     layer.bindPopUp("<h3>McDonalds</h3><hr><p>City:" + feature.properties.city +", " + feature.properties.state)
-//     }
-//     var mcIcon = L.icon({
-//         iconUrl: icon_url,
-//         iconSize: [10, 10],
-//         iconAnchor: [5, 5]
-//     });
-//     var markers = L.geoJSON(mcData, {
-//         pointToLayer: function(feature, latlng) {
-//         return L.marker(latlng, {icon: mcIcon});
-//         }, onEachFeature: onEachFeature
-//     });
-
-//     createMap(markers)
-// }
-
-// function createIcon() {
-
 ///////////////////////////////////////
 // Layers
 ///////////////////////////////////////
 
 var overlayMaps = {
-    "States": statesLayer,
+    "States": statesLayer
+    ,
     "McDonalds": mcDonalds
 };
 
 var baseMaps = {
-    "Outdoor": outdoors,
-    "Satellite": satMap
+    "Outdoor": dark,
+    "Satellite": satellitemap
 };
 
 L.control.layers(baseMaps, overlayMaps, {
