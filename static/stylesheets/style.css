@@ -27,3 +27,7 @@
   background: #ffc300;
   border: 0;
 }
+
+div {
+    display: block;
+}
