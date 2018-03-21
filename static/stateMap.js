@@ -193,10 +193,10 @@ d3.json(mcDs_url, function(response){
         style: {
             color: "black",
             fillColor:"black",
-            radius: .25,
+            radius: 1,
             opacity: .5},
         onEachFeature: function onEachFeature(feature, layer) {
-            layer.bindPopup("<h5>McDonalds</h5><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
+            layer.bindPopup("<h4>McDonalds</h4><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
         }
     }).addTo(mcDonalds);
     mcDonalds.addTo(map)
