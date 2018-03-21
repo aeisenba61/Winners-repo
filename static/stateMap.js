@@ -170,32 +170,35 @@ var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master
 //   iconAnchor: [5, 5]
 // });
 
-var mcIcon = L.icon({
-  iconUrl: 'McDs_Golden_Arches.png',
-  shadowUrl: 'McDs_Golden_Arches.png',
 
-  iconSize:     [38, 95], // size of the icon
-  shadowSize:   [50, 64], // size of the shadow
-  iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-  shadowAnchor: [4, 62],  // the same for the shadow
-  popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+
+
+
+
+
+d3.json(mcDs_url, function(response){
+    var mcIcon = L.icon({
+      iconUrl: 'McDs_Golden_Arches.png',
+      shadowUrl: 'McDs_Golden_Arches.png',
+
+      iconSize:     [38, 95], // size of the icon
+      shadowSize:   [50, 64], // size of the shadow
+      iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+      shadowAnchor: [4, 62],  // the same for the shadow
+      popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+    L.geoJSON(response, {
+        pointToLayer: function(feature, latlng) {
+            return L.Marker(latlng, {icon: mcIcon});
+        },
+        onEachFeature: function onEachFeature(feature, layer) {
+            layer.bindPopUp("<h3>McDonalds</h3><hr><p>City:" + feature.properties.city +", " + feature.properties.state)
+        }
+    }).addTo(mcDonalds);
+    mcDonalds.addTo(map)
 });
 
 
-
-
-
-d3.json(mcDs_url, function(mcData){
-    var markers = L.geoJSON(mcData, {
-    pointToLayer: function(feature, latlng) {
-        return L.marker(latlng, {icon: mcIcon});
-    }, onEachFeature: onEachFeature
-    }).addTo(map);
-});
-
-function onEachFeature(feature, layer) {
-    layer.bindPopUp("<h3>McDonalds</h3><hr><p>City:" + feature.properties.city +", " + feature.properties.state)
-}
 
 ///////////////////////////////////////
 // Layers
