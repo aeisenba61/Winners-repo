@@ -25,7 +25,7 @@ d3.json(mcDs_url, function(response){
     });
     L.geoJSON(response, {
         pointToLayer: function(feature, latlng) {
-            return L.Marker(latlng, {icon: mcIcon});
+            return L.marker(latlng, {icon: mcIcon});
             // return L.circleMarker(latlng);
         },
         style: {

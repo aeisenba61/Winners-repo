@@ -176,40 +176,27 @@ function stateMap(selected){
     })
 }
 
-
-
-// //////////////// McDonalds Markers ///////////////
+/////////////////// 
+//McDonalds Markers 
+///////////////////
 
 var mcDonalds = new L.layerGroup();
 var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson'
 var icon_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/images/McDs_Golden_Arches.png'
 
-// var mcIcon = L.icon({
-//   iconUrl: icon_url,
-//   iconSize: [10, 10],
-//   iconAnchor: [5, 5]
-// });
-
 d3.json(mcDs_url, function(response){
-    // var mcIcon = L.icon({
-    //   iconUrl: icon_url, //or 'McDs_Golden_Arches.png'
-    //   shadowUrl: icon_url, //or 'McDs_Golden_Arches.png'
-    //   iconSize:     [38, 95], // size of the icon
-    //   shadowSize:   [50, 64], // size of the shadow
-    //   iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    //   shadowAnchor: [4, 62],  // the same for the shadow
-    //   popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-    // });
     L.geoJSON(response, {
         pointToLayer: function(feature, latlng) {
-            // return L.Marker(latlng, {icon: mcIcon});
             return L.circleMarker(latlng);
-        },
+        }
+        ,
         style: {
             color: "black",
-            fillColor:"black"},
+            fillColor:"black",
+            radius: .25,
+            opacity: .5},
         onEachFeature: function onEachFeature(feature, layer) {
-            layer.bindPopUp("<h3>McDonalds</h3><hr><p>City:" + feature.properties.city +", " + feature.properties.state)
+            layer.bindPopup("<h5>McDonalds</h5><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
         }
     }).addTo(mcDonalds);
     mcDonalds.addTo(map)
