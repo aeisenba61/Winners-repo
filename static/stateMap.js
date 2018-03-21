@@ -4,12 +4,12 @@ var light = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/
   "access_token=pk.eyJ1IjoiaXJvbmJlYXJkIiwiYSI6ImNpbDhqOXdmeTBjc3N2am0yd3JneWo2NDMifQ." +
   "wGNLjMdRNK2PNjMwPtTVDA");
 
-var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v10/tiles/256/{z}/{x}/{y}?" +
+var dark = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?" +
   "access_token=pk.eyJ1IjoiaXJvbmJlYXJkIiwiYSI6ImNpbDhqOXdmeTBjc3N2am0yd3JneWo2NDMifQ." +
   "wGNLjMdRNK2PNjMwPtTVDA");
 
 var map = L.map("stateMap", {
-      center: [37.8, -96],
+      center: [50, -116],
       zoom: 3,
       // noWrap: true,
       // maxBounds: [[90,-180], [-90, 180]],
@@ -160,10 +160,9 @@ function stateMap(selected){
 
 // //////////////// McDonalds Markers ///////////////
 
-// var mcDonalds = new L.layerGroup();
-// var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson'
+var mcDonalds = new L.layerGroup();
+var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson'
 // var icon_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/images/McDs_Golden_Arches.png'
-
 
 // var mcIcon = L.icon({
 //   iconUrl: icon_url,
@@ -171,17 +170,32 @@ function stateMap(selected){
 //   iconAnchor: [5, 5]
 // });
 
-// d3.json(mcDs_url, function(mcData){
-//     var markers = L.geoJSON(mcData, {
-//     pointToLayer: function(feature, latlng) {
-//         return L.marker(latlng, {icon: mcIcon});
-//     }, onEachFeature: onEachFeature
-//     }).addTo(map);
-// });
+var mcIcon = L.icon({
+  iconUrl: 'McDs_Golden_Arches.png',
+  shadowUrl: 'McDs_Golden_Arches.png',
 
-// function onEachFeature(feature, layer) {
-//     layer.bindPopUp("<h3>McDonalds</h3><hr><p>City:" + feature.properties.city +", " + feature.properties.state)
-// }
+  iconSize:     [38, 95], // size of the icon
+  shadowSize:   [50, 64], // size of the shadow
+  iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+  shadowAnchor: [4, 62],  // the same for the shadow
+  popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
+
+
+
+
+d3.json(mcDs_url, function(mcData){
+    var markers = L.geoJSON(mcData, {
+    pointToLayer: function(feature, latlng) {
+        return L.marker(latlng, {icon: mcIcon});
+    }, onEachFeature: onEachFeature
+    }).addTo(map);
+});
+
+function onEachFeature(feature, layer) {
+    layer.bindPopUp("<h3>McDonalds</h3><hr><p>City:" + feature.properties.city +", " + feature.properties.state)
+}
 
 ///////////////////////////////////////
 // Layers
@@ -193,13 +207,13 @@ function layers(selected) {
 
     var overlayMaps = {
         [sel_layer]: statesLayer
-        // ,
-        // "McDonalds": mcDonalds
+        ,
+        "McDonalds": mcDonalds
     };
 
     var baseMaps = {
         "Light": light,
-        "Satellite": satellitemap
+        "Dark": dark
     };
 
     L.control.layers(baseMaps, overlayMaps, {
@@ -207,3 +221,4 @@ function layers(selected) {
     }).addTo(map);
 
 }
+
