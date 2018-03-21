@@ -1,5 +1,6 @@
- { "type" : "Feature Collection",
-    "features" : [
+ { "type" : "FeatureCollection",
+    "features" : 
+    [
          { "type" : "Feature",
         "geometry" : {
             "type" : "Point",
@@ -56188,7 +56189,7 @@
         "geometry" : {
             "type" : "Point",
             "coordinates" : [-93.734225, 39.003224]},
-        "properties" : { "storeNumber" : 29689, "address" : "6676 HIGHWAY 13-BOX B"", "city" : "HIGGINSVILLE", "state": "MO"}
+        "properties" : { "storeNumber" : 29689, "address" : "6676 HIGHWAY 13-BOX B", "city" : "HIGGINSVILLE", "state": "MO"}
         },
          { "type" : "Feature",
         "geometry" : {
@@ -79210,7 +79211,7 @@
         "geometry" : {
             "type" : "Point",
             "coordinates" : [-118.220733, 34.6312]},
-        "properties" : { "storeNumber" : 30907, "address" : "5049 WEST AVENUE N"", "city" : "QUARTZ HILL", "state": "CA"}
+        "properties" : { "storeNumber" : 30907, "address" : "5049 WEST AVENUE N", "city" : "QUARTZ HILL", "state": "CA"}
         },
          { "type" : "Feature",
         "geometry" : {
@@ -85020,6 +85021,6 @@
             "coordinates" : [-131.67241, 55.348905]},
         "properties" : { "storeNumber" : 7468, "address" : "2417 TONGASS AVE SUITE 108", "city" : "KETCHIKAN", "state": "AK"}
         }
-         ]
+    ]
 }
     

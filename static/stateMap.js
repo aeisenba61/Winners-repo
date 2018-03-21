@@ -54,19 +54,20 @@ function stateMap(selected){
         var geojson;
 
         function getColor(d) {
-            return  d > 40 ? 'red' :
-                    d > 35 ? 'orange' :
-                    d > 30 ? 'yellow' :
-                    d > 25 ? 'green' :
-                    d > 20 ? 'blue' :
-                    d > 15 ? 'lightsteelgray' :
-                    d > 10 ? 'purple' :
+            return  d > 40 ? '#dd1021' :
+                    d > 35 ? '#e63a19' :
+                    d > 30 ? '#ee550e' :
+                    d > 25 ? '#f46d00' :
+                    d > 20 ? '#f98400' :
+                    d > 15 ? '#fc9900' :
+                    d > 10 ? '#feae00' :
+                    d > 5  ? '#ffc300' :
                              'white';
         }
         function style(feature) {
             return {
                 fillColor: getColor(feature.properties[selected]),
-                weight: 2,
+                weight: .5,
                 opacity: 1,
                 color: 'white',
                 fillOpacity: 0.9
@@ -132,26 +133,45 @@ function stateMap(selected){
             info.update();
         }
 
-        var legend = L.control({position: 'bottomright'});
+        function createControl() {
+            customControl = L.control({position: 'bottomright'});
+            customControl.onAdd = function (map) {
+                var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom toggleContainer info legend');
+                    grades = [0, 5, 10, 15, 20, 25, 30, 35, 40],
+                    labels = [];
 
-        legend.onAdd = function (map) {
+                    for (var i = 0; i < grades.length; i++) {
+                        div.innerHTML +=
+                            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                    }
+                    return container;
+            };
+        customControl.addTo(map); 
+        }
 
-            var div = L.DomUtil.create('div', 'info legend'),
-                grades = [0, 10, 20, 30, 40],
-                labels = [];
+        var menuControl = L.Control.extend({
 
-            // loop through our density intervals and generate a label with a colored square for each interval
-            for (var i = 0; i < grades.length; i++) {
-                div.innerHTML +=
-                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            options: {
+                position: 'bottomright'
+            },
+
+            onAdd: function (map) {
+                var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom menuControl info legend');
+                container.onclick = function() {
+                    if (menuControlActive === true) {
+                        this.style.backgroundImage = 'url(/images/close.png)'
+                        createControl()
+                        menuControlActive = false
+                    } else {
+                        this.style.backgroundImage = 'url(/images/open.png)'
+                        map.removeControl(customControl);
+                        menuControlActive = true
+                    }
+                }
+                return container;
             }
-
-            return div;
-        };
-
-        legend.addTo(map);
-
+        });
         layers(label);
     })
 }
@@ -162,7 +182,7 @@ function stateMap(selected){
 
 var mcDonalds = new L.layerGroup();
 var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson'
-// var icon_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/images/McDs_Golden_Arches.png'
+var icon_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/images/McDs_Golden_Arches.png'
 
 // var mcIcon = L.icon({
 //   iconUrl: icon_url,
@@ -170,35 +190,30 @@ var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master
 //   iconAnchor: [5, 5]
 // });
 
-
-
-
-
-
-
 d3.json(mcDs_url, function(response){
-    var mcIcon = L.icon({
-      iconUrl: 'McDs_Golden_Arches.png',
-      shadowUrl: 'McDs_Golden_Arches.png',
-
-      iconSize:     [38, 95], // size of the icon
-      shadowSize:   [50, 64], // size of the shadow
-      iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-      shadowAnchor: [4, 62],  // the same for the shadow
-      popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-    });
+    // var mcIcon = L.icon({
+    //   iconUrl: icon_url, //or 'McDs_Golden_Arches.png'
+    //   shadowUrl: icon_url, //or 'McDs_Golden_Arches.png'
+    //   iconSize:     [38, 95], // size of the icon
+    //   shadowSize:   [50, 64], // size of the shadow
+    //   iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    //   shadowAnchor: [4, 62],  // the same for the shadow
+    //   popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    // });
     L.geoJSON(response, {
         pointToLayer: function(feature, latlng) {
-            return L.Marker(latlng, {icon: mcIcon});
+            // return L.Marker(latlng, {icon: mcIcon});
+            return L.circleMarker(latlng);
         },
+        style: {
+            color: "black",
+            fillColor:"black"},
         onEachFeature: function onEachFeature(feature, layer) {
             layer.bindPopUp("<h3>McDonalds</h3><hr><p>City:" + feature.properties.city +", " + feature.properties.state)
         }
     }).addTo(mcDonalds);
     mcDonalds.addTo(map)
 });
-
-
 
 ///////////////////////////////////////
 // Layers

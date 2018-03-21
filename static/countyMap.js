@@ -54,19 +54,20 @@ function countyMap(selected){
         var geojson;
 
         function getColor(d) {
-            return  d > 40 ? 'red' :
-                    d > 35 ? 'orange' :
-                    d > 30 ? 'yellow' :
-                    d > 25 ? 'green' :
-                    d > 20 ? 'blue' :
-                    d > 15 ? 'lightsteelgray' :
-                    d > 10 ? 'purple' :
+            return  d > 40 ? '#dd1021' :
+                    d > 35 ? '#e63a19' :
+                    d > 30 ? '#ee550e' :
+                    d > 25 ? '#f46d00' :
+                    d > 20 ? '#f98400' :
+                    d > 15 ? '#fc9900' :
+                    d > 10 ? '#feae00' :
+                    d > 5  ? '#ffc300' :
                              'white';
         }
         function style(feature) {
             return {
                 fillColor: getColor(feature.properties[selected]),
-                weight: 2,
+                weight: .5,
                 opacity: 1,
                 color: 'white',
                 fillOpacity: 0.9
@@ -137,7 +138,7 @@ function countyMap(selected){
         legend.onAdd = function (map) {
 
             var div = L.DomUtil.create('div', 'info legend'),
-                grades = [0, 10, 20, 30, 40],
+                grades = [0, 5, 10, 15, 20, 25, 30, 35, 40],
                 labels = [];
 
             // loop through our density intervals and generate a label with a colored square for each interval
@@ -169,29 +170,27 @@ var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master
 //   iconAnchor: [5, 5]
 // });
 
-var mcIcon = L.icon({
-  iconUrl: 'McDs_Golden_Arches.png',
-  shadowUrl: 'McDs_Golden_Arches.png',
+d3.json(mcDs_url, function(response){
+    var mcIcon = L.icon({
+      iconUrl: 'McDs_Golden_Arches.png',
+      shadowUrl: 'McDs_Golden_Arches.png',
 
-  iconSize:     [38, 95], // size of the icon
-  shadowSize:   [50, 64], // size of the shadow
-  iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-  shadowAnchor: [4, 62],  // the same for the shadow
-  popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+      iconSize:     [38, 95], // size of the icon
+      shadowSize:   [50, 64], // size of the shadow
+      iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+      shadowAnchor: [4, 62],  // the same for the shadow
+      popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+    L.geoJSON(response, {
+        pointToLayer: function(feature, latlng) {
+            return L.Marker(latlng, {icon: mcIcon});
+        },
+        onEachFeature: function onEachFeature(feature, layer) {
+            layer.bindPopUp("<h3>McDonalds</h3><hr><p>City:" + feature.properties.city +", " + feature.properties.state)
+        }
+    }).addTo(mcDonalds);
+    mcDonalds.addTo(map)
 });
-
-
-d3.json(mcDs_url, function(mcData){
-    var markers = L.geoJSON(mcData, {
-    pointToLayer: function(feature, latlng) {
-        return L.marker(latlng, {icon: mcIcon});
-    }, onEachFeature: onEachFeature
-    }).addTo(map);
-});
-
-function onEachFeature(feature, layer) {
-    layer.bindPopUp("<h3>McDonalds</h3><hr><p>City:" + feature.properties.city +", " + feature.properties.state)
-}
 
 ///////////////////////////////////////
 // Layers
