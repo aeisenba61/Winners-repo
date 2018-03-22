@@ -108,45 +108,26 @@ function stateMap(selected){
         }).addTo(statesLayer)
         statesLayer.addTo(map);
 
-        function createControl() {
-            customControl = L.control({position: 'bottomright'});
-            customControl.onAdd = function (map) {
-                var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom toggleContainer info legend');
-                    grades = [0, 5, 10, 15, 20, 25, 30, 35, 40],
-                    labels = [];
+        var legend = L.control({position: 'bottomright'});
 
-                    for (var i = 0; i < grades.length; i++) {
-                        div.innerHTML +=
-                            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-                    }
-                    return container;
-            };
-        customControl.addTo(map); 
-        }
+        legend.onAdd = function (map) {
 
-        var menuControl = L.Control.extend({
+            var div = L.DomUtil.create('div', 'info legend'),
+                grades = [0, 5, 10, 15, 20, 25, 30, 35, 40],
+                labels = [];
 
-            options: {
-                position: 'bottomright'
-            },
-
-            onAdd: function (map) {
-                var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom menuControl info legend');
-                container.onclick = function() {
-                    if (menuControlActive === true) {
-                        this.style.backgroundImage = 'url(/images/close.png)'
-                        createControl()
-                        menuControlActive = false
-                    } else {
-                        this.style.backgroundImage = 'url(/images/open.png)'
-                        map.removeControl(customControl);
-                        menuControlActive = true
-                    }
-                }
-                return container;
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
             }
-        });
+
+            return div;
+        };
+
+        legend.addTo(map);
+
         layers(label);
     })
 }
@@ -159,22 +140,19 @@ var mcDonalds = new L.layerGroup();
 var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson';
 var icon_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/images/McDs_Golden_Arches.png';
 
-var mcIcon = L.icon({
-    iconUrl: icon_url,
-    shadowUrl: icon_url,
-  
-    iconSize:     [50, 50], // size of the icon
-    shadowSize:   [50, 64], // size of the shadow
-    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    shadowAnchor: [4, 62],  // the same for the shadow
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-  });
-
 d3.json(mcDs_url, function(response){
     L.geoJSON(response, {
         pointToLayer: function(feature, latlng) {
-            return L.marker(latlng, {icon: mcIcon});
-        }
+            return L.circleMarker(latlng);
+        },
+        style: {    
+           color: "black",    
+           fillColor:"black", 
+           radius: 1, 
+           opacity: .5    
+       },
+       onEachFeature: function onEachFeature(feature, layer) {  
+           layer.bindPopup("<h4>McDonalds</h4><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
     }).addTo(mcDonalds);
     mcDonalds.addTo(map)
 });
@@ -197,10 +175,13 @@ function layers(selected) {
         "Light": light,
         "Dark": dark
     };
-
-    L.control.layers(baseMaps, overlayMaps, {
+    var layerControl = L.control.layers(baseMaps, overlayMaps, {
         collapsed: true
     }).addTo(map);
+
+    function changeLegend() {
+        layerControl.remove() 
+    }
 
 }
 

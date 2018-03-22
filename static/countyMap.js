@@ -138,7 +138,6 @@ function countyMap(selected){
  
 var mcDonalds = new L.layerGroup();
 var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson';
-var icon_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/images/McDs_Golden_Arches.png';
 
 var mcIcon = L.icon({
     iconUrl: icon_url,
@@ -150,12 +149,19 @@ var mcIcon = L.icon({
     shadowAnchor: [4, 62],  // the same for the shadow
     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
   });
-
-  d3.json(mcDs_url, function(response){
+d3.json(mcDs_url, function(response){
     L.geoJSON(response, {
         pointToLayer: function(feature, latlng) {
-            return L.marker(latlng, {icon: mcIcon});
-        }
+            return L.circleMarker(latlng);
+        },
+        style: {    
+           color: "black",    
+           fillColor:"black", 
+           radius: 1, 
+           opacity: .5    
+       },
+       onEachFeature: function onEachFeature(feature, layer) {  
+           layer.bindPopup("<h4>McDonalds</h4><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
     }).addTo(mcDonalds);
     mcDonalds.addTo(map)
 });
