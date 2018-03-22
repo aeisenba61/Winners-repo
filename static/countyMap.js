@@ -11,7 +11,7 @@ var dark = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/25
 
 var map = L.map("countyMap", {
       center: [50, -116],
-      zoom: 6,
+      zoom: 3,
       // noWrap: true,
       // maxBounds: [[90,-180], [-90, 180]],
       layers: [light],
@@ -139,16 +139,6 @@ function countyMap(selected){
 var mcDonalds = new L.layerGroup();
 var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson';
 
-var mcIcon = L.icon({
-    iconUrl: icon_url,
-    shadowUrl: icon_url,
-  
-    iconSize:     [50, 50], // size of the icon
-    shadowSize:   [50, 64], // size of the shadow
-    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    shadowAnchor: [4, 62],  // the same for the shadow
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-  });
 d3.json(mcDs_url, function(response){
     L.geoJSON(response, {
         pointToLayer: function(feature, latlng) {
@@ -162,6 +152,7 @@ d3.json(mcDs_url, function(response){
        },
        onEachFeature: function onEachFeature(feature, layer) {  
            layer.bindPopup("<h4>McDonalds</h4><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
+       }
     }).addTo(mcDonalds);
     mcDonalds.addTo(map)
 });
