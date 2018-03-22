@@ -69,69 +69,44 @@ function countyMap(selected){
                 fillColor: getColor(feature.properties[selected]),
                 weight: .5,
                 opacity: 1,
-                color: 'white',
-                fillOpacity: 0.9
+                // color: 'white',
+                fillOpacity: 0.5
             };
         }
 
-        function highlightFeature(e) {
-            var layer = e.target;
-
-            layer.setStyle({
-                weight: 5,
-                color: '#666',
-                dashArray: '',
-                fillOpacity: 0.7
-            });
-
-        }
-
-        function resetHighlight(e) {
-            geojson.resetStyle(e.target);
-        }
-
-        function zoomToFeature(e) {
-            map.fitBounds(e.target.getBounds());
-        }
-
         function onEachFeature(feature, layer) {
-            layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-                click: zoomToFeature
-            });
-        }
+        // Set mouse events to change map styling
+          layer.on({
+            // When a user's mouse touches a map feature, the mouseover event calls this function, that feature's opacity changes to 90% so that it stands out
+            mouseover: function(event) {
+              layer = event.target;
+              layer.setStyle({
+                fillOpacity: 0.9,
+                fillColor: getColor(feature.properties[selected])
+              });
+            },
+            // When the cursor no longer hovers over a map feature - when the mouseout event occurs - the feature's opacity reverts back to 50%
+            mouseout: function(event) {
+              layer = event.target;
+              layer.setStyle({
+                fillOpacity:  0.5,
+                fillColor: getColor(feature.properties[selected])
+              });
+            },
+            // When a feature (neighborhood) is clicked, it is enlarged to fit the screen
+            click: function(event) {
+              map.fitBounds(event.target.getBounds());
+            }
+          });
+          // Giving each feature a pop-up with information pertinent to it
+          layer.bindPopup("<h4 align='center'><b>" + feature.properties.NAME + "</h4> <hr> <h4 align='center'> Rate: " + feature.properties[selected] + "%<b></h4>");
 
+        }
         geojson = L.geoJson(countyData, {
             style: style,
             onEachFeature: onEachFeature
         }).addTo(countyLayer)
         countyLayer.addTo(map);
-
-        var info = L.control();
-
-        info.onAdd = function (map) {
-            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-            this.update();
-            return this._div;
-        };
-
-        // method that we will use to update the control based on feature properties passed
-        info.update = function (props) {
-            this._div.innerHTML = '<h5><b>% ' + label + '</b></h5>' +  (props ?
-                '<b>' + props.name + '</b><br />' + props[selected] + ' %'
-                : 'Hover over a county');
-        };
-
-        info.addTo(map);
-
-        function highlightFeature(e) {
-            info.update(layer.feature.properties);
-        }
-
-        function resetHighlight(e) {
-            info.update();
-        }
 
         var legend = L.control({position: 'bottomright'});
 
