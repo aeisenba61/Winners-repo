@@ -10,7 +10,7 @@ var dark = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/25
 
 var map = L.map("stateMap", {
       center: [50, -116],
-      zoom: 3,
+      zoom: 6,
       // noWrap: true,
       // maxBounds: [[90,-180], [-90, 180]],
       layers: [light],
@@ -69,69 +69,44 @@ function stateMap(selected){
                 fillColor: getColor(feature.properties[selected]),
                 weight: .5,
                 opacity: 1,
-                color: 'white',
-                fillOpacity: 0.9
+                // color: 'white',
+                fillOpacity: 0.5
             };
         }
 
-        function highlightFeature(e) {
-            var layer = e.target;
-
-            layer.setStyle({
-                weight: 5,
-                color: '#666',
-                dashArray: '',
-                fillOpacity: 0.7
-            });
-
-        }
-
-        function resetHighlight(e) {
-            geojson.resetStyle(e.target);
-        }
-
-        function zoomToFeature(e) {
-            map.fitBounds(e.target.getBounds());
-        }
-
         function onEachFeature(feature, layer) {
-            layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-                click: zoomToFeature
-            });
-        }
+        // Set mouse events to change map styling
+          layer.on({
+            // When a user's mouse touches a map feature, the mouseover event calls this function, that feature's opacity changes to 90% so that it stands out
+            mouseover: function(event) {
+              layer = event.target;
+              layer.setStyle({
+                fillOpacity: 0.9,
+                fillColor: getColor(feature.properties[selected])
+              });
+            },
+            // When the cursor no longer hovers over a map feature - when the mouseout event occurs - the feature's opacity reverts back to 50%
+            mouseout: function(event) {
+              layer = event.target;
+              layer.setStyle({
+                fillOpacity:  0.5,
+                fillColor: getColor(feature.properties[selected])
+              });
+            },
+            // When a feature (neighborhood) is clicked, it is enlarged to fit the screen
+            click: function(event) {
+              map.fitBounds(event.target.getBounds());
+            }
+          });
+          // Giving each feature a pop-up with information pertinent to it
+          layer.bindPopup("<h4 align='center'><b>" + feature.properties.name + "</h4> <hr> <h4 align='center'> Rate: " + Math.round(feature.properties[selected]).toFixed(1) + "%<b></h4>");
 
+        }
         geojson = L.geoJson(stateData, {
             style: style,
             onEachFeature: onEachFeature
         }).addTo(statesLayer)
         statesLayer.addTo(map);
-
-        var info = L.control();
-
-        info.onAdd = function (map) {
-            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-            this.update();
-            return this._div;
-        };
-
-        // method that we will use to update the control based on feature properties passed
-        info.update = function (props) {
-            this._div.innerHTML = '<h5><b>% ' + label + '</b></h5>' +  (props ?
-                '<b>' + props.name + '</b><br />' + props[selected] + ' %'
-                : 'Hover over a state');
-        };
-
-        info.addTo(map);
-
-        function highlightFeature(e) {
-            info.update(layer.feature.properties);
-        }
-
-        function resetHighlight(e) {
-            info.update();
-        }
 
         function createControl() {
             customControl = L.control({position: 'bottomright'});
@@ -181,22 +156,24 @@ function stateMap(selected){
 ///////////////////
 
 var mcDonalds = new L.layerGroup();
-var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson'
-var icon_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/images/McDs_Golden_Arches.png'
+var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson';
+var icon_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/images/McDs_Golden_Arches.png';
+
+var mcIcon = L.icon({
+    iconUrl: icon_url,
+    shadowUrl: icon_url,
+  
+    iconSize:     [50, 50], // size of the icon
+    shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+  });
 
 d3.json(mcDs_url, function(response){
     L.geoJSON(response, {
         pointToLayer: function(feature, latlng) {
-            return L.circleMarker(latlng);
-        }
-        ,
-        style: {
-            color: "black",
-            fillColor:"black",
-            radius: .25,
-            opacity: .5},
-        onEachFeature: function onEachFeature(feature, layer) {
-            layer.bindPopup("<h5>McDonalds</h5><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
+            return L.marker(latlng, {icon: mcIcon});
         }
     }).addTo(mcDonalds);
     mcDonalds.addTo(map)
