@@ -1,6 +1,18 @@
 var county_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/countyOut.geojson';
 
+var light = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?" +
+  "access_token=pk.eyJ1IjoiaXJvbmJlYXJkIiwiYSI6ImNpbDhqOXdmeTBjc3N2am0yd3JneWo2NDMifQ." +
+  "wGNLjMdRNK2PNjMwPtTVDA");
+
 var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson';
+
+map = L.map("countyMap", {
+    center: [50, -116],
+    zoom: 3,
+    layers: [light],
+});
+
+// var countyLayer = new L.layerGroup();
 
 analyzeCounty("diabetes");
 
@@ -47,42 +59,32 @@ function analyzeCounty(selected_var) {
 
         var label = all_labels[selected_var];
 
-            // function getColor(d) {
-            //     return  d > 40 ? '#dd1021' :
-            //             d > 35 ? '#e63a19' :
-            //             d > 30 ? '#ee550e' :
-            //             d > 25 ? '#f46d00' :
-            //             d > 20 ? '#f98400' :
-            //             d > 15 ? '#fc9900' :
-            //             d > 10 ? '#feae00' :
-            //             d > 5  ? '#ffc300' :
-            //                     'white';
-            // }
-                   function getColor(d) {
-                return  d > 40 ? 'red' :
-                        d > 35 ? 'orange' :
-                        d > 30 ? 'yellow' :
-                        d > 25 ? 'green' :
-                        d > 20 ? 'blue' :
-                        d > 15 ? 'lightsteelgrey' :
-                        d > 10 ? 'violet' :
-                        d > 5  ? 'black' :
-                                'white';
-            }
-            function style(feature) {
-                return {
-                    fillColor: getColor(feature.properties[selected]),
-                    weight: .5,
-                    opacity: .5,
-                    color: '#dd1021',
-                    fillOpacity: 0.5
-                };
-            }
+        function getColor(d) {
+            return  d > 40 ? '#dd1021' :
+                    d > 35 ? '#e63a19' :
+                    d > 30 ? '#ee550e' :
+                    d > 25 ? '#f46d00' :
+                    d > 20 ? '#f98400' :
+                    d > 15 ? '#fc9900' :
+                    d > 10 ? '#feae00' :
+                    d > 5  ? '#ffc300' :
+                            'white';
+        }
 
-            function onEachFeature(feature, layer) {
-            // Set mouse events to change map styling
+        function style(feature) {
+            return {
+                fillColor: getColor(feature.properties[selected]),
+                weight: .5,
+                opacity: .5,
+                color: '#dd1021',
+                fillOpacity: 0.5
+            };
+        }
+
+        function onEachFeature(feature, layer) {
+        // Set mouse events to change map styling
             layer.on({
-                // When a user's mouse touches a map feature, the mouseover event calls this function, that feature's opacity changes to 90% so that it stands out
+                // When a user's mouse touches a map feature, the mouseover event calls this function, that feature's   opacity changes to 90% so that it stands out
                 mouseover: function(event) {
                 layer = event.target;
                 layer.setStyle({
@@ -90,7 +92,7 @@ function analyzeCounty(selected_var) {
                     ,fillColor: getColor(feature.properties[selected])
                 });
                 },
-                // When the cursor no longer hovers over a map feature - when the mouseout event occurs - the feature's opacity reverts back to 50%
+                // When the cursor no longer hovers over a map feature - when the mouseout event occurs - the   feature's opacity reverts back to 50%
                 mouseout: function(event) {
                 layer = event.target;
                 layer.setStyle({
@@ -107,39 +109,36 @@ function analyzeCounty(selected_var) {
             var formatMcD = d3.format(".0f");
             layer.bindPopup("<h4 align='center'><b>" + feature.properties.NAME + "</b></h4> <hr><h4>"
                 + label + ": " + feature.properties[selected] + "%<br>McDonalds locations: " + formatMcD(feature.properties.mccount) + "</h4>");
+        }
+        if (legend) {legend.remove();};
+        if (countyLayer) {countyLayer.remove();};
 
-            }
-
-            if (countyLayer) {countyLayer.remove();};
-
-            countyLayer = L.geoJson(countyData, {
-                style: style,
-                onEachFeature: onEachFeature
-            });
-
-            //layers(label);
+        countyLayer = L.geoJson(countyData, {
+            style: style,
+            onEachFeature: onEachFeature
+        });
+        countyLayer.addTo(map);
+        //layers(label);
 
     ///////////////////
-    //McDonalds Markers
+    // McDonalds Markers
     ///////////////////
 
-
-    mcDonaldsLayer = L.geoJSON(mcDonalds, {
+        mcDonaldsLayer = L.geoJSON(mcDonalds, {
             pointToLayer: function(feature, latlng) {
                 return L.circleMarker(latlng);
             },
-            style: {
-            color: "black",
-            fillColor:"black",
-            radius: .25,
-            opacity: .25
-        },
-        onEachFeature: function onEachFeature(feature, layer) {
-            layer.bindPopup("<h4>McDonalds</h4><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
-        }});
-
-
-
+                style: {
+                color: "black",
+                fillColor:"black",
+                radius: .25,
+                opacity: .25
+            },
+            onEachFeature: function onEachFeature(feature, layer) {
+                layer.bindPopup("<h4>McDonalds</h4><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
+            }
+        });
+        mcDonaldsLayer.addTo(map);
     ///////////////////////////////////////
     // Layers
     ///////////////////////////////////////
@@ -155,18 +154,10 @@ function analyzeCounty(selected_var) {
         };
 
 
-        var map = L.map("countyMap", {
-            center: [50, -116],
-            zoom: 3,
-            // noWrap: true,
-            // maxBounds: [[90,-180], [-90, 180]],
-            layers: [light, countyLayer, mcDonaldsLayer],
-        });
-
         L.control.layers(baseMaps, overlayMaps, {
             collapsed: false
         }).addTo(map);
-
+        
         var legend = L.control({position: 'bottomright'});
 
             legend.onAdd = function (map) {

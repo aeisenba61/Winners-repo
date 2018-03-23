@@ -10,6 +10,6 @@ function optionChanged(new_var) {
     donut(new_var);
     renderScatter(new_var);
     document.getElementById('countyMap').contentWindow.analyzeCounty(new_var);
-    document.getElementById('stateMap').contentWindow.stateMap(new_var);
+    document.getElementById('stateMap').contentWindow.analyzeState(new_var);
 
 }

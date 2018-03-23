@@ -131,6 +131,26 @@ function renderScatter(selected) {
           d3.select(this).style("fill", "#dd1021");
         });
 
+        //State Abbreviations
+    chart.selectAll(null)
+      .data(stData)
+      .enter()
+      .append("text")
+      .attr("x", function(data, index) {
+        return xLinearScale(data.mcd_per_cap);
+      })
+      .attr("y", function(data, index) {
+        return yLinearScale(data.sel_var) + 3.5;
+      })
+      .attr("text-anchor", "middle")
+      .text(function(data){
+          return data.abbrev;
+      })
+      .attr("class", "circleLabel")
+      .attr("font-size", "11px")
+      .attr("fill", "#ffc300");
+      // end State Abbreviations
+
     chart.append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(bottomAxis)
