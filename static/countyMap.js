@@ -1,183 +1,191 @@
 var county_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/countyOut.geojson';
-// var county_url_alt = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/produce%20geojson%20files/countyOut.js';
 
-var light = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?" +
-  "access_token=pk.eyJ1IjoiaXJvbmJlYXJkIiwiYSI6ImNpbDhqOXdmeTBjc3N2am0yd3JneWo2NDMifQ." +
-  "wGNLjMdRNK2PNjMwPtTVDA");
+var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson';
 
-var dark = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?" +
-  "access_token=pk.eyJ1IjoiaXJvbmJlYXJkIiwiYSI6ImNpbDhqOXdmeTBjc3N2am0yd3JneWo2NDMifQ." +
-  "wGNLjMdRNK2PNjMwPtTVDA");
+analyzeCounty("diabetes");
 
-var map = L.map("countyMap", {
-      center: [50, -116],
-      zoom: 3,
-      // noWrap: true,
-      // maxBounds: [[90,-180], [-90, 180]],
-      layers: [light],
-});
+function analyzeCounty(selected_var) {
 
-var countyLayer = new L.layerGroup();
+    console.log(selected_var);
 
-// Default map
-countyMap("diabetes");
+    var selected_var = selected_var;
 
-function countyMap(selected){
+    d3.queue()
+        .defer(d3.json, county_url)
+        .defer(d3.json, mcDs_url)
+        .await(countyMap);
 
-    // Map HTML selected var to geoJSON var names
+    function countyMap(error, countyData, mcDonalds) {
 
-    var selected = `${selected}`;
+        var light = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?" +
+        "access_token=pk.eyJ1IjoiaXJvbmJlYXJkIiwiYSI6ImNpbDhqOXdmeTBjc3N2am0yd3JneWo2NDMifQ." +
+        "wGNLjMdRNK2PNjMwPtTVDA");
 
-    var choro_vars = {
-        diabetes: "diab_per",
-        obesity: "obesity_per",
-        pov: "low_inc_pop_per",
-        snap: "snap_households_per"
-    };
+        var dark = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?" +
+        "access_token=pk.eyJ1IjoiaXJvbmJlYXJkIiwiYSI6ImNpbDhqOXdmeTBjc3N2am0yd3JneWo2NDMifQ." +
+        "wGNLjMdRNK2PNjMwPtTVDA");
 
-    // Label for legend
+        var countyLayer;
+        var mcDonaldsLayer;
 
-    var all_labels = {diabetes: "diabetic",
-                      obesity: "obese",
-                      pov: "low income",
-                      snap: "receiving SNAP"};
 
-    var label = all_labels[selected];
+        var choro_vars = {
+            diabetes: "diab_per",
+            obesity: "obesity_per",
+            pov: "low_inc_pop_per",
+            snap: "snap_households_per"
+        };
 
-    // Change selected to geoJSON var name
-    var selected = choro_vars[selected];
+        var selected = choro_vars[selected_var];
 
-    d3.json(county_url, function(error, countyData){
+        // Label for legend
 
-        if (error) throw error;
+        var all_labels = {diabetes: "Diabetic",
+                        obesity: "Obese",
+                        pov: "Low income",
+                        snap: "Receiving SNAP"};
 
-        var geojson;
+        var label = all_labels[selected_var];
 
-        function getColor(d) {
-            return  d > 40 ? '#dd1021' :
-                    d > 35 ? '#e63a19' :
-                    d > 30 ? '#ee550e' :
-                    d > 25 ? '#f46d00' :
-                    d > 20 ? '#f98400' :
-                    d > 15 ? '#fc9900' :
-                    d > 10 ? '#feae00' :
-                    d > 5  ? '#ffc300' :
-                             'white';
-        }
-        function style(feature) {
-            return {
-                fillColor: getColor(feature.properties[selected]),
-                weight: .5,
-                opacity: 1,
-                // color: 'white',
-                fillOpacity: 0.5
-            };
-        }
-
-        function onEachFeature(feature, layer) {
-        // Set mouse events to change map styling
-          layer.on({
-            // When a user's mouse touches a map feature, the mouseover event calls this function, that feature's opacity changes to 90% so that it stands out
-            mouseover: function(event) {
-              layer = event.target;
-              layer.setStyle({
-                fillOpacity: 0.9,
-                fillColor: getColor(feature.properties[selected])
-              });
-            },
-            // When the cursor no longer hovers over a map feature - when the mouseout event occurs - the feature's opacity reverts back to 50%
-            mouseout: function(event) {
-              layer = event.target;
-              layer.setStyle({
-                fillOpacity:  0.5,
-                fillColor: getColor(feature.properties[selected])
-              });
-            },
-            // When a feature (neighborhood) is clicked, it is enlarged to fit the screen
-            click: function(event) {
-              map.fitBounds(event.target.getBounds());
+            // function getColor(d) {
+            //     return  d > 40 ? '#dd1021' :
+            //             d > 35 ? '#e63a19' :
+            //             d > 30 ? '#ee550e' :
+            //             d > 25 ? '#f46d00' :
+            //             d > 20 ? '#f98400' :
+            //             d > 15 ? '#fc9900' :
+            //             d > 10 ? '#feae00' :
+            //             d > 5  ? '#ffc300' :
+            //                     'white';
+            // }
+                   function getColor(d) {
+                return  d > 40 ? 'red' :
+                        d > 35 ? 'orange' :
+                        d > 30 ? 'yellow' :
+                        d > 25 ? 'green' :
+                        d > 20 ? 'blue' :
+                        d > 15 ? 'lightsteelgrey' :
+                        d > 10 ? 'violet' :
+                        d > 5  ? 'black' :
+                                'white';
             }
-          });
-          // Giving each feature a pop-up with information pertinent to it
-          layer.bindPopup("<h4 align='center'><b>" + feature.properties.NAME + "</h4> <hr> <h4 align='center'> Rate: " + feature.properties[selected] + "%<b></h4>");
+            function style(feature) {
+                return {
+                    fillColor: getColor(feature.properties[selected]),
+                    weight: .5,
+                    opacity: .5,
+                    color: '#dd1021',
+                    fillOpacity: 0.5
+                };
+            }
 
-        }
-        geojson = L.geoJson(countyData, {
-            style: style,
-            onEachFeature: onEachFeature
-        }).addTo(countyLayer)
-        countyLayer.addTo(map);
+            function onEachFeature(feature, layer) {
+            // Set mouse events to change map styling
+            layer.on({
+                // When a user's mouse touches a map feature, the mouseover event calls this function, that feature's opacity changes to 90% so that it stands out
+                mouseover: function(event) {
+                layer = event.target;
+                layer.setStyle({
+                    fillOpacity: 0.9
+                    ,fillColor: getColor(feature.properties[selected])
+                });
+                },
+                // When the cursor no longer hovers over a map feature - when the mouseout event occurs - the feature's opacity reverts back to 50%
+                mouseout: function(event) {
+                layer = event.target;
+                layer.setStyle({
+                    fillOpacity:  0.5
+                    ,fillColor: getColor(feature.properties[selected])
+                });
+                },
+                // When a feature (neighborhood) is clicked, it is enlarged to fit the screen
+                click: function(event) {
+                map.fitBounds(event.target.getBounds());
+                }
+            });
+            // Giving each feature a pop-up with information pertinent to it
+            var formatMcD = d3.format(".0f");
+            layer.bindPopup("<h4 align='center'><b>" + feature.properties.NAME + "</b></h4> <hr><h4>"
+                + label + ": " + feature.properties[selected] + "%<br>McDonalds locations: " + formatMcD(feature.properties.mccount) + "</h4>");
+
+            }
+
+            if (countyLayer) {countyLayer.remove();};
+
+            countyLayer = L.geoJson(countyData, {
+                style: style,
+                onEachFeature: onEachFeature
+            });
+
+            //layers(label);
+
+    ///////////////////
+    //McDonalds Markers
+    ///////////////////
+
+
+    mcDonaldsLayer = L.geoJSON(mcDonalds, {
+            pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng);
+            },
+            style: {
+            color: "black",
+            fillColor:"black",
+            radius: .25,
+            opacity: .25
+        },
+        onEachFeature: function onEachFeature(feature, layer) {
+            layer.bindPopup("<h4>McDonalds</h4><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
+        }});
+
+
+
+    ///////////////////////////////////////
+    // Layers
+    ///////////////////////////////////////
+
+        var overlayMaps = {
+            [label]: countyLayer,
+            McDonalds: mcDonaldsLayer
+        };
+
+        var baseMaps = {
+            "Light": light,
+            "Dark": dark
+        };
+
+
+        var map = L.map("countyMap", {
+            center: [50, -116],
+            zoom: 3,
+            // noWrap: true,
+            // maxBounds: [[90,-180], [-90, 180]],
+            layers: [light, countyLayer, mcDonaldsLayer],
+        });
+
+        L.control.layers(baseMaps, overlayMaps, {
+            collapsed: false
+        }).addTo(map);
 
         var legend = L.control({position: 'bottomright'});
 
-        legend.onAdd = function (map) {
+            legend.onAdd = function (map) {
 
-            var div = L.DomUtil.create('div', 'info legend'),
-                grades = [0, 5, 10, 15, 20, 25, 30, 35, 40],
-                labels = [];
+                var div = L.DomUtil.create('div', 'info legend'),
+                    grades = [0, 5, 10, 15, 20, 25, 30, 35, 40],
+                    labels = [];
 
-            // loop through our density intervals and generate a label with a colored square for each interval
-            for (var i = 0; i < grades.length; i++) {
-                div.innerHTML +=
-                    '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-            }
+                // loop through our density intervals and generate a label with a colored square for each interval
+                for (var i = 0; i < grades.length; i++) {
+                    div.innerHTML +=
+                        '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                        grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                }
 
-            return div;
-        };
+                return div;
+            };
 
-        legend.addTo(map);
+            legend.addTo(map);
 
-        layers(label);
-    })
-}
-
-/////////////////// 
-//McDonalds Markers 
-///////////////////
- 
-var mcDonalds = new L.layerGroup();
-var mcDs_url = 'https://raw.githubusercontent.com/aeisenba61/Winners-repo/master/clean-data/geojson/mcDs.geojson';
-
-d3.json(mcDs_url, function(response){
-    L.geoJSON(response, {
-        pointToLayer: function(feature, latlng) {
-            return L.circleMarker(latlng);
-        },
-        style: {    
-           color: "black",    
-           fillColor:"black", 
-           radius: 1, 
-           opacity: .5    
-       },
-       onEachFeature: function onEachFeature(feature, layer) {  
-           layer.bindPopup("<h4>McDonalds</h4><hr><p>City: " + feature.properties.city +", " + feature.properties.state)
-       }
-    }).addTo(mcDonalds);
-    mcDonalds.addTo(map)
-});
-
-///////////////////////////////////////
-// Layers
-///////////////////////////////////////
-
-function layers(selected) {
-
-    var sel_layer = `% ${selected}`;
-
-    var overlayMaps = {
-        "McDonalds": mcDonalds
-        ,[sel_layer]: countyLayer
-        
-    };
-
-    var baseMaps = {
-        "Light": light,
-        "Dark": dark
-    };
-
-    L.control.layers(baseMaps, overlayMaps, {
-        collapsed: true
-    }).addTo(map);
-
+    }
 }

@@ -9,7 +9,7 @@ function optionChanged(new_var) {
 // Rerun
     donut(new_var);
     renderScatter(new_var);
-    document.getElementById('countyMap').contentWindow.countyMap(new_var);
+    document.getElementById('countyMap').contentWindow.analyzeCounty(new_var);
     document.getElementById('stateMap').contentWindow.stateMap(new_var);
 
 }
