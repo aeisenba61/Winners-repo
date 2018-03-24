@@ -106,13 +106,14 @@ function analyzeState(selected_var) {
                 }
             });
             // Giving each feature a pop-up with information pertinent to it
+            var formatVar = d3.format(".1f");
             var formatMcD = d3.format(".0f");
             layer.bindPopup("<h4 align='center'><b>" + feature.properties.name + "</b></h4> <hr><h4>"
-                + label + ": " + feature.properties[selected] + "%<br>McDonalds locations: " + formatMcD(feature.properties.mcCount) + "</h4>");
+                + label + ": " + formatVar(feature.properties[selected]) + "%<br>McDonalds locations: " + formatMcD(feature.properties.mcCount) + "</h4>");
         }
-        
+
         if (stateLayer) {stateLayer.remove();};
-        
+
         stateLayer = L.geoJson(stateData, {
             style: style,
             onEachFeature: onEachFeature
@@ -143,8 +144,8 @@ function analyzeState(selected_var) {
     // Layers
     ///////////////////////////////////////
 
-// I thought some variety of using this would work, but.... no. 
-// if (legend) {legend.remove();}; 
+// I thought some variety of using this would work, but.... no.
+// if (legend) {legend.remove();};
 
 
 
@@ -162,7 +163,7 @@ function analyzeState(selected_var) {
         L.control.layers(baseMaps, overlayMaps, {
             collapsed: false
         }).addTo(map);
-        
+
         var legend = L.control({position: 'bottomright'});
 
             legend.onAdd = function (map) {
