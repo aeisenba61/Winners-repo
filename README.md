@@ -1,3 +1,3 @@
 # Winners-repo
 
-Final app: https://dashboard.heroku.com/apps/winners-mcd/resources
+Final app: https://winners-mcd.herokuapp.com/
